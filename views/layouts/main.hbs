@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Web page settings --> 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title> Web page template. </title> <!-- Web page title. -->
+
+    <!-- Styling --> 
+    <link rel="stylesheet" href="style/style.css" /> <!-- Default styles. -->
+    <link rel="stylesheet" href="style/sidenav.css" /> <!-- Styles for side navigation. -->
+  </head>
+  <body>
+    <h1>This is the main template.</h1>
+
+    <!-- Side navigation bar HTML elements. --> 
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <a href="index">Landing page</a>
+      <a href="barchart">Test for D3 bar chart. </a>
+      <a href="vegalitetest">Vega lite test. </a>
+      <a href="#">Contact</a>
+    </div>
+    <p onclick="openNav()"> >> MENU </p>
+
+    <!-- Open and close functions for navigation bar.  -->
+    <script>
+      /* Set the width of the side navigation to 250px */
+      function openNav() {document.getElementById("mySidenav").style.width = "250px";}
+      /* Set the width of the side navigation to 0 */
+      function closeNav() {document.getElementById("mySidenav").style.width = "0";} 
+    </script>
+
+    {{{body}}}
+  </body>
+</html>

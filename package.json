@@ -1,0 +1,21 @@
+{
+  "name": "node_project_template",
+  "version": "1.0.0",
+  "description": "Template for NodeJS + Express Handlebars projects",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js",
+    "help": " echo \"Commands: 'test, start, help'. \" "
+  },
+  "author": "Oliver Medoc Benee Petersen",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "d3": "^7.6.1",
+    "express": "^4.18.1",
+    "express-handlebars": "^6.0.6",
+    "nodemon": "^2.0.19",
+    "path": "^0.12.7"
+  }
+}
