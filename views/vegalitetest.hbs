@@ -7,7 +7,7 @@
 
 <!-- Container for the visualization -->
 <div id="vis"></div>
-<!-- Script for the visualization specification. --> 
+<!-- Script for the visualization specification. -->
 <script>
   // Assign the specification to a local variable vlSpec.
   var vlSpec = {
@@ -44,28 +44,53 @@
 </script>
 
 <div id="vis2"></div>
-<script> 
+<script type="module"> 
   import axios from 'https://cdn.skypack.dev/axios';
-  // Fetch data from API. 
-  const dataSet = async function getData() {
-    return await axios.get('/api/data');
+  
+  function twoArrayToVegaObjects(labels,data){
+    const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i],b[i]])
+    const Unlabeleddata = zip(labels,data)
+    var labeledData = []
+    Unlabeleddata.forEach((aData) => {
+        labeledData.push({a : aData[0], b : aData[1]})
+    })
+    console.log(labeledData)
+    return labeledData
   }
 
-  var vegaDataFormat;
-  const labels = ["a", "b", "c", "d", "e"]
-  dataSet.forEach(function(elem) => {
-    vegaDataFormat = vegaDataFormat + "{" + elem + 
+  // Fetch data from API. 
+  const myPromise = new Promise((value) => {value(axios.get('/api/data'))
   })
-
-  var vlSpec = {
-    "$schema": 'https://vega.github.io/schema/vega-lite/v5.json',
-    "data": {
-
+  myPromise.then((value) => {
+    const labels = ["a", "b", "c", "d", "e","f"]
+    const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i],b[i]])
+    const data = zip(labels,value.data)
+    var labeledData = []
+    data.forEach((aData) => {
+        labeledData.push({a : aData[0], b : aData[1]})
+    })
+    console.log(labeledData)
+    vlSpec = {
+    $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+    data: {
+      values: labeledData
     },
-    "mark": "bar",
-    "encoding": {
-      "x": {"field": "a", "type": "nominal", "axis": {"labelangle": 0}},
-      "y": {"field": "b", "type": "quantitative"}
+    mark: 'bar',
+    encoding: {
+      y: { field: 'a', type: 'nominal' },
+      x: {
+        aggregate: 'average',
+        field: 'b',
+        type: 'quantitative',
+        axis: {
+          title: 'Average of b'
+        }
+      }
     }
   }
+  vegaEmbed('#vis2', vlSpec)
+  .then((res) => res.view
+  .insert("myData", data)
+  .run())
+  })
 </script>
