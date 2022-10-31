@@ -7,7 +7,7 @@
 
 <!-- Container for the visualization -->
 <div id="vis"></div>
-<!-- Script for the visualization specification. -->
+<!-- Script for the visualization specification. --> 
 <script>
   // Assign the specification to a local variable vlSpec.
   var vlSpec = {
@@ -41,12 +41,108 @@
 
   // Embed the visualization in the container with id `vis`
   vegaEmbed('#vis', vlSpec);
-</script>
 
+
+
+</script>
 <div id="vis2"></div>
 <script type="module"> 
   import axios from 'https://cdn.skypack.dev/axios';
-  
+  function csvToArray(str, delimiter = ",") {
+  const headers = str.slice(0, str.indexOf("\n")).split(delimiter);
+  const rows = str.slice(str.indexOf("\n") + 1).split("\n");
+  const arr = rows.map(function (row) {
+    const values = row.split(delimiter);
+    const el = headers.reduce(function (object, header, index) {
+      object[header] = values[index];
+      return object;
+    }, {});
+    return el;
+  });
+  return arr;
+}
+
+
+  function fillYear(year,start,end){
+    let intStart = parseInt(start)
+    let yearList = [];
+    for (let i = intStart; i <= end; i++) {
+      if(i>9){ yearList.push(year + "M" + i)} else yearList.push(year + "M" + "0" + i)
+  } 
+    return yearList
+  }
+
+  function fromToListCreator(from, to){
+      let list = [];
+      from = from.split('M');
+      to = to.split('M');
+      console.log("from")
+      console.log(from)
+      console.log("to")
+      console.log(to)
+      if(from[0]==to[0]){
+        if(from[1]<to[1]){
+        return fillYear(from[0],from[1],to[1])}
+      } else if (from[0]<to[0]) {
+          list = list.concat(fillYear(from[0],from[1],"12"))
+          for (let i = parseInt(from[0])+1; i < to[0]; i++) {
+              list = list.concat(fillYear(i,"01","12"))
+          }
+          list = list.concat(fillYear(to[0],"01",to[1]))
+      } 
+      console.log("list")
+      console.log(list)
+      return list
+  }
+
+  function fetchData(slectedTabel){
+    return axios.post("https://api.statbank.dk/v1/data", {
+   "table": slectedTabel,
+   "format": "CSV",
+   "variables": [
+      {
+         "code": "ENHED",
+         "values": [
+            "100"
+         ]
+      },
+      {
+         "code": "TID",
+         "values": [
+            "2001*",
+            "2002*"
+         ]
+      },
+      {
+         "code": "VareGR",
+         "values": [
+            "000000"
+         ]
+      }
+   ]
+    })
+  .then(function (response) {
+    return response
+    
+  })
+   
+  }
+
+
+  const FetchDataPromisePris111 = new Promise((value) => {value(fetchData("PRIS111"))
+  })
+
+  FetchDataPromisePris111.then((value) => {console.log("value")
+    const data = csvToArray(value.data)
+    console.log(data)
+    
+    
+    
+    }
+  )
+  console.log(fromToListCreator("2001M01","2010M06"))
+
+
   function twoArrayToVegaObjects(labels,data){
     const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i],b[i]])
     const Unlabeleddata = zip(labels,data)
@@ -54,26 +150,23 @@
     Unlabeleddata.forEach((aData) => {
         labeledData.push({a : aData[0], b : aData[1]})
     })
-    console.log(labeledData)
     return labeledData
   }
 
-  // Fetch data from API. 
+  
+
+
+
   const myPromise = new Promise((value) => {value(axios.get('/api/data'))
   })
   myPromise.then((value) => {
     const labels = ["a", "b", "c", "d", "e","f"]
-    const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i],b[i]])
-    const data = zip(labels,value.data)
-    var labeledData = []
-    data.forEach((aData) => {
-        labeledData.push({a : aData[0], b : aData[1]})
-    })
-    console.log(labeledData)
+    const data = twoArrayToVegaObjects(labels,value.data)
+    
     vlSpec = {
     $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
     data: {
-      values: labeledData
+      values: data
     },
     mark: 'bar',
     encoding: {
@@ -90,7 +183,31 @@
   }
   vegaEmbed('#vis2', vlSpec)
   .then((res) => res.view
-  .insert("myData", data)
+  .insert("labeledData", data)
   .run())
-  })
+  }
+    )
 </script>
+
+
+<script>
+document.getElementById("slider").addEventListener("click", displayDate);
+
+function displayDate() {
+  document.getElementById("demo").innerHTML = Date();
+}
+//document.getElementById("slider").addEventListener('mouseup', function() {console.log("slider released")});
+
+
+function timeChaged(value) {
+  console.log("chaged")
+  rangeValue.innerText = value
+}
+</script>
+
+
+
+<div class="slider">
+<input type="range" min="0" max="200" value="100" oninput="timeChaged(this.value)">
+<p id="rangeValue"></p>
+</div>
