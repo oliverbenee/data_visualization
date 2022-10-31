@@ -198,10 +198,11 @@ function displayDate() {
 }
 //document.getElementById("slider").addEventListener('mouseup', function() {console.log("slider released")});
 
-
+//Add functionality to listener to have max value equal labeleddata index length
 function timeChaged(value) {
   console.log("chaged")
   rangeValue.innerText = value
+  console.log(data[data.length-1])
 }
 </script>
 
