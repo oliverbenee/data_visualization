@@ -11,185 +11,1029 @@
 <script>
   // Assign the specification to a local variable vlSpec.
   var vlSpec = {
-    $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
-    data: {
-      values: [
-        { a: 'C', b: 2 },
-        { a: 'C', b: 7 },
-        { a: 'C', b: 4 },
-        { a: 'D', b: 1 },
-        { a: 'D', b: 2 },
-        { a: 'D', b: 6 },
-        { a: 'E', b: 8 },
-        { a: 'E', b: 4 },
-        { a: 'E', b: 7 }
-      ]
-    },
-    mark: 'bar',
-    encoding: {
-      y: { field: 'a', type: 'nominal' },
-      x: {
-        aggregate: 'average',
-        field: 'b',
-        type: 'quantitative',
-        axis: {
-          title: 'Average of b'
-        }
+    "$schema": "https://vega.github.io/schema/vega/v5.json",
+    "description": "An example of a space-fulling radial layout for hierarchical data.",
+    "width": 600,
+    "height": 600,
+    "padding": 5,
+    "autosize": "none",
+    // Interactions. 
+    "signals": [
+      { "name": "title", "value": "Price index distribution for various wares.", "description": "{'group':'Title'}" },
+      {
+        "name": "titleFont",
+        "value": 25,
+        "description": "{'group':'Title', 'displayName':'Font Size'}"
+      },
+      {
+        "name": "fontScale",
+        "update": "max(min(10,min(width,height)/35),5)",
+        "description": "{'group':'Title', 'displayName':'Font Size'}"
+      },
+      { "name": "sizeRef", "update": "min(width,height)/2.5" },
+      { "name": "centerX", "update": "width/2" },
+      { "name": "centerY", "update": "height/2" },
+      // Bools for hovering. 
+      {
+        "name": "hoveredArcIn",
+        "on": [
+          { "events": "arc:mouseover", "update": "datum" },
+          { "events": "arc:mouseout", "update": "{}" }
+        ]
+      },
+      {
+        "name": "hoveredArcOUT",
+        "on": [
+          { "events": "arc:mouseover", "update": "datum" },
+          { "events": "arc:mouseout", "update": "{}" }
+        ]
+      },
+      {
+        "name": "hoveredText",
+        "value": {},
+        "on": [
+          { "events": "text:mouseover", "update": "datum" },
+          { "events": "text:mouseout", "update": "{}" }
+        ]
+      },
+      {
+        "name": "isHoveredOnArc",
+        "init": "false",
+        "on": [
+          { "events": "arc:mouseover", "update": "true" },
+          { "events": "arc:mouseout", "update": "false" }
+        ]
+      },
+      {
+        "name": "isHoveredOnText",
+        "init": "false",
+        "on": [
+          { "events": "text:mouseover", "update": "true" },
+          { "events": "text:mouseout", "update": "false" }
+        ]
+      },
+      // Are we hovering over something, and is it text?
+      {
+        "name": "isHoveredEmpty",
+        "value": {
+          "category": "A",
+          "myTreeAncestorList": { "currentNodeAndAncestor": "hooba" }
+        },
+        "on": [
+          { "events": "arc:mouseout ", "update": "true" },
+          { "events": "arc:mouseover", "update": "false" },
+          { "events": "text:mouseout ", "update": "true" },
+          { "events": "text:mouseover", "update": "false" }
+        ]
       }
-    }
+    ],
+    "data": [
+      {
+        // The data itself. 
+        "name": "mainData",
+        "values": [
+          // Levels.
+          {
+            "value": "{'isOptional':false, 'dataType':'Real', 'doesRequireAggregate':true,isShowInTooltip:true}",
+            "level1": "{'displayName':'Level 1', 'isOptional':true, 'dataType':'Any', 'doesRequireAggregate':false,isShowInTooltip:true}",
+            "level2": "{'displayName':'Level 2', 'isOptional':true, 'dataType':'Any', 'doesRequireAggregate':false,isShowInTooltip:true}",
+            "level3": "{'displayName':'Level 3', 'isOptional':true, 'dataType':'Any', 'doesRequireAggregate':false,isShowInTooltip:true}",
+            "level4": "{'displayName':'Level 4', 'isOptional':true, 'dataType':'Any', 'doesRequireAggregate':false,isShowInTooltip:true}",
+            "level5": "{'displayName':'Level 5', 'isOptional':true, 'dataType':'Any', 'doesRequireAggregate':false,isShowInTooltip:true}",
+            "level6": "{'displayName':'Level 6', 'isOptional':true, 'dataType':'Any', 'doesRequireAggregate':false,isShowInTooltip:true}"
+          },
+          // BEGIN DATA. 
+          { "value": 102.9, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "brød" },
+          { "value": 102.6, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "kød" },
+          { "value": 109.6, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "fisk og skaldyr" },
+          { "value": 104.2, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "mælk ost og æg" },
+          { "value": 118.8, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "smør, margarine, olier" },
+          { "value": 106.9, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "frugt" },
+          { "value": 105.9, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "grøntsager" },
+          { "value": 101, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "sukkervarer" },
+          { "value": 103.4, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "andre fødevarer" },
+          { "value": 105.9, "level1": "fødevarer (ej alkohol)", "level2": "drikke", "level3": "kaffe, te, kakao" },
+          { "value": 98.1, "level1": "fødevarer (ej alkohol)", "level2": "drikke", "level3": "mineralvand, sodavand, juice" },
+          { "value": 103.2, "level1": "tobak og alkoholgenstande", "level2": "spiritus" },
+          { "value": 102.1, "level1": "tobak og alkoholgenstande", "level2": "vin" },
+          { "value": 105.1, "level1": "tobak og alkoholgenstande", "level2": "øl" },
+          { "value": 100.9, "level1": "tobak og alkoholgenstande", "level2": "tobak" },
+          { "value": 97.6, "level1": "beklædning og fodtøj", "level2": "materialer" },
+          { "value": 90.4, "level1": "beklædning og fodtøj", "level2": "beklædningsartikler" },
+          { "value": 105.2, "level1": "beklædning og fodtøj", "level2": "rensning, reparation" },
+          { "value": 105, "level1": "beklædning og fodtøj", "level2": "sko" },
+          { "value": 104.1, "level1": "boligbenyttelse, el og opvarmning", "level2": "husleje" },
+          { "value": 98.6, "level1": "boligbenyttelse, el og opvarmning", "level2": "vandforsyning" },
+          { "value": 90.3, "level1": "boligbenyttelse, el og opvarmning", "level2": "elektricitet" },
+          { "value": 85.3, "level1": "boligbenyttelse, el og opvarmning", "level2": "gas" },
+          { "value": 94.6, "level1": "boligbenyttelse, el og opvarmning", "level2": "fjernvarme" },
+          { "value": 181.9, "level1": "kommunikation", "level2": "posttjenester" },
+          { "value": 88.4, "level1": "kommunikation", "level2": "telefon og telefax" },
+          { "value": 83.3, "level1": "kultur", "level2": "radio-tv" },
+          { "value": 98, "level1": "kultur", "level2": "fotografi" },
+          { "value": 82.5, "level1": "kultur", "level2": "databehandling" },
+          { "value": 105, "level1": "kultur", "level2": "bøger" },
+          { "value": 106.7, "level1": "uddannelse" },
+          { "value": 112.4, "level1": "restauranter" }
+        ],
+        "transform": [
+          {
+            "type": "aggregate",
+            "groupby": [
+              "level1",
+              "level2",
+              "level3",
+              "level4",
+              "level5",
+              "level6"
+            ],
+            "fields": ["value"],
+            "ops": ["sum"],
+            "as": ["value"]
+          },
+          {
+            "type": "formula",
+            "as": "firstLevelNodesId",
+            "expr": "!isDefined(datum.parent)?'rootID':datum.parent"
+          },
+          // Define level 1, 2, 3, 4, 5, 6 in the vis for easier coding. 
+          {
+            "type": "formula",
+            "expr": "datum.level1?datum.level1:''",
+            "as": "level1"
+          },
+          {
+            "type": "formula",
+            "expr": "datum.level2?datum.level2:''",
+            "as": "level2"
+          },
+          {
+            "type": "formula",
+            "expr": "datum.level3?datum.level3:''",
+            "as": "level3"
+          },
+          {
+            "type": "formula",
+            "expr": "datum.level4?datum.level4:''",
+            "as": "level4"
+          },
+          {
+            "type": "formula",
+            "expr": "datum.level5?datum.level5:''",
+            "as": "level5"
+          },
+          {
+            "type": "formula",
+            "expr": "datum.level6?datum.level6:''",
+            "as": "level6"
+          }
+        ]
+      },
+      // Select arc and parents. 
+      {
+        "name": "hoveredArcDetail",
+        "on": [
+          { "trigger": "hoveredArcIn", "toggle": "hoveredArcIn" },
+          { "trigger": "hoveredText", "toggle": "hoveredText" }
+        ],
+        "transform": [
+          { "type": "flatten", "fields": ["myTreeAncestorList"] },
+          {
+            "type": "formula",
+            "expr": "datum.myTreeAncestorList.currentNodeAndAncestors",
+            "as": "nodeToCheckIfParentOfCurrentNode"
+          }
+        ]
+      },
+      {
+        "name": "hoveredTextDetail",
+        "values": [
+          {
+            "hoveredText": "blaba",
+            "currentNode": "formatted: {Austalie}",
+            "r0": 180,
+            "a0": 0,
+            "r1": 240,
+            "a1": 0.1662681348696548,
+            "aggregatedValue": 57,
+            "firstLevelNodesId": 2,
+            "depth": 3,
+            "myTreeAncestorList": [
+              {
+                "parent": "formatted: {9}",
+                "currentNode": "formatted: {Austalie}",
+                "firstLevelNodesId": 2,
+                "level1": "formatted: {1996}",
+                "value": 57,
+                "currentNodeParent": "formatted: {Austalie}formatted: {9}",
+                "parentAndGrandParent": "formatted: {9}formatted: {1996}",
+                "ancestors": "formatted: {9}formatted: {1996}rootID612",
+                "pseudoKey": 36,
+                "currentNodeAndAncestors": "formatted: {Austalie}formatted: {9}formatted: {1996}rootID61236",
+                "linkToLevel4": "formatted: {Austalie}formatted: {9}formatted: {1996}",
+                "a0": 0,
+                "r0": 180,
+                "a1": 0.1662681348696548,
+                "r1": 240,
+                "depth": 3,
+                "children": 0,
+                "rowKey": "formatted: {Austalie}formatted: {9}",
+                "aggregatedValue": 57
+              }
+            ],
+            "nodeToCheckIfParentOfCurrentNode": "formatted: {Austalie}formatted: {9}formatted: {1996}rootID61236"
+          }
+        ],
+        "on": [{ "trigger": "hoveredText", "toggle": "hoveredText" }]
+      },
+      // Isolated level 1
+      {
+        "name": "isolatedLevel1",
+        "source": ["mainData"],
+        "transform": [
+          {
+            "type": "project",
+            "fields": ["level1", "currentNode", "value"],
+            "as": ["currentNode", "parent", "value"]
+          },
+          {
+            "type": "aggregate",
+            "groupby": ["parent", "currentNode"],
+            "fields": ["value"],
+            "ops": ["sum"],
+            "as": ["value"]
+          },
+          {
+            "type": "formula",
+            "as": "parent",
+            "expr": "!isDefined(datum.parent)?'rootID':datum.parent"
+          },
+          { "type": "filter", "expr": "datum.currentNode" },
+          { "type": "identifier", "as": "firstLevelNodesId" },
+          { "type": "identifier", "as": "pseudoKey" },
+          { "type": "formula", "expr": "'rootID'", "as": "ancestors" },
+          {
+            "type": "formula",
+            "expr": "datum.currentNode +datum.parent+datum.pseudoKey",
+            "as": "currentNodeAndAncestors"
+          }
+        ]
+      },
+      {
+        "name": "mainDataWithFirstParentInfo",
+        "source": ["mainData"],
+        "transform": [
+          {
+            "type": "lookup",
+            "from": "isolatedLevel1",
+            "key": "currentNode",
+            "fields": ["level1"],
+            "values": ["firstLevelNodesId"],
+            "as": ["firstLevelNodesId"]
+          }
+        ]
+      },
+      // Root node. 
+      {
+        "name": "rootNode",
+        "source": "isolatedLevel1",
+        "transform": [
+          {
+            "type": "project",
+            "fields": ["parent", "level2"],
+            "as": ["currentNode", "parent"]
+          },
+          { "type": "aggregate", "groupby": ["currentNode", "parent"] },
+          {
+            "type": "project",
+            "fields": ["currentNode", "parent"],
+            "as": ["currentNode", "parent"]
+          },
+          { "type": "formula", "as": "currentNodeAndAncestors", "expr": "'rootID'" }
+        ]
+      },
+      // Isolated sub-levels 2-6
+      {
+        "name": "isolatedLevel2",
+        "source": "mainDataWithFirstParentInfo",
+        "transform": [
+          {
+            "type": "project",
+            "fields": ["level1", "level2", "value", "firstLevelNodesId"],
+            "as": ["parent", "currentNode", "value", "firstLevelNodesId"]
+          },
+          {
+            "type": "aggregate",
+            "groupby": ["parent", "currentNode", "firstLevelNodesId"],
+            "fields": ["value"],
+            "ops": ["sum"],
+            "as": ["value"]
+          },
+          { "type": "filter", "expr": "datum.currentNode" },
+          { "type": "filter", "expr": "datum.parent" },
+          {
+            "type": "lookup",
+            "from": "isolatedLevel1",
+            "key": "currentNode",
+            "fields": ["parent"],
+            "values": ["currentNodeAndAncestors"],
+            "as": ["ancestors"]
+          },
+          { "type": "identifier", "as": "pseudoKey" },
+          {
+            "type": "formula",
+            "expr": "datum.currentNode +datum.ancestors+datum.pseudoKey",
+            "as": "currentNodeAndAncestors"
+          },
+          {
+            "type": "formula",
+            "expr": "toString(datum.currentNode) +toString(datum.parent)",
+            "as": "currentNodeParent"
+          }
+        ]
+      },
+      {
+        "name": "isolatedLevel3",
+        "source": "mainDataWithFirstParentInfo",
+        "transform": [
+          {
+            "type": "project",
+            "fields": [
+              "level2",
+              "level3",
+              "value",
+              "firstLevelNodesId",
+              "level1"
+            ],
+            "as": [
+              "parent",
+              "currentNode",
+              "value",
+              "firstLevelNodesId",
+              "level1"
+            ]
+          },
+          {
+            "type": "aggregate",
+            "groupby": ["parent", "currentNode", "firstLevelNodesId", "level1"],
+            "fields": ["value"],
+            "ops": ["sum"],
+            "as": ["value"]
+          },
+          { "type": "filter", "expr": "datum.currentNode" },
+          { "type": "filter", "expr": "datum.parent" },
+          {
+            "type": "formula",
+            "expr": "datum.currentNode +datum.parent",
+            "as": "currentNodeParent"
+          },
+          {
+            "type": "formula",
+            "expr": "toString(datum.parent) +toString(datum.level1)",
+            "as": "parentAndGrandParent"
+          },
+          {
+            "type": "lookup",
+            "from": "isolatedLevel2",
+            "key": "currentNodeParent",
+            "fields": ["parentAndGrandParent"],
+            "values": ["currentNodeAndAncestors"],
+            "as": ["ancestors"]
+          },
+          { "type": "identifier", "as": "pseudoKey" },
+          {
+            "type": "formula",
+            "expr": "datum.currentNode+datum.ancestors+datum.pseudoKey",
+            "as": "currentNodeAndAncestors"
+          },
+          {
+            "type": "formula",
+            "expr": "datum.currentNode+datum.parentAndGrandParent",
+            "as": "linkToLevel4"
+          }
+        ]
+      },
+      {
+        "name": "isolatedLevel4",
+        "source": "mainDataWithFirstParentInfo",
+        "transform": [
+          {
+            "type": "project",
+            "fields": [
+              "level3",
+              "level4",
+              "value",
+              "firstLevelNodesId",
+              "level2",
+              "level1"
+            ],
+            "as": [
+              "parent",
+              "currentNode",
+              "value",
+              "firstLevelNodesId",
+              "level2",
+              "level1"
+            ]
+          },
+          {
+            "type": "aggregate",
+            "groupby": [
+              "parent",
+              "currentNode",
+              "firstLevelNodesId",
+              "level1",
+              "level2"
+            ],
+            "fields": ["value"],
+            "ops": ["sum"],
+            "as": ["value"]
+          },
+          { "type": "filter", "expr": "datum.currentNode" },
+          { "type": "filter", "expr": "datum.parent" },
+          {
+            "type": "formula",
+            "expr": "datum.currentNode +datum.parent",
+            "as": "currentNodeParent"
+          },
+          {
+            "type": "formula",
+            "expr": "toString(datum.parent)+toString(datum.level2)+toString(datum.level1)",
+            "as": "parentAndGrandGrandParent"
+          },
+          {
+            "type": "lookup",
+            "from": "isolatedLevel3",
+            "key": "linkToLevel4",
+            "fields": ["parentAndGrandGrandParent"],
+            "values": ["currentNodeAndAncestors"],
+            "as": ["ancestors"]
+          },
+          { "type": "identifier", "as": "pseudoKey" },
+          {
+            "type": "formula",
+            "expr": "datum.currentNode+datum.ancestors+datum.pseudoKey",
+            "as": "currentNodeAndAncestors"
+          },
+          {
+            "type": "formula",
+            "expr": "datum.currentNode+datum.parentAndGrandGrandParent",
+            "as": "linkToLevel5"
+          }
+        ]
+      },
+      {
+        "name": "isolatedLevel5",
+        "source": "mainDataWithFirstParentInfo",
+        "transform": [
+          {
+            "type": "project",
+            "fields": [
+              "level4",
+              "level5",
+              "value",
+              "firstLevelNodesId",
+              "level3",
+              "level2",
+              "level1"
+            ],
+            "as": [
+              "parent",
+              "currentNode",
+              "value",
+              "firstLevelNodesId",
+              "level3",
+              "level2",
+              "level1"
+            ]
+          },
+          {
+            "type": "aggregate",
+            "groupby": [
+              "parent",
+              "currentNode",
+              "firstLevelNodesId",
+              "level1",
+              "level2",
+              "level3"
+            ],
+            "fields": ["value"],
+            "ops": ["sum"],
+            "as": ["value"]
+          },
+          { "type": "filter", "expr": "datum.currentNode" },
+          { "type": "filter", "expr": "datum.parent" },
+          {
+            "type": "formula",
+            "expr": "toString(datum.parent)+toString(datum.level3)+toString(datum.level2)+toString(datum.level1)",
+            "as": "parentAndGrandGrandGrandParent"
+          },
+          {
+            "type": "lookup",
+            "from": "isolatedLevel4",
+            "key": "linkToLevel5",
+            "fields": ["parentAndGrandGrandGrandParent"],
+            "values": ["currentNodeAndAncestors"],
+            "as": ["ancestors"]
+          },
+          { "type": "identifier", "as": "pseudoKey" },
+          {
+            "type": "formula",
+            "expr": "datum.currentNode+datum.ancestors+datum.pseudoKey",
+            "as": "currentNodeAndAncestors"
+          },
+          {
+            "type": "formula",
+            "expr": "datum.currentNode+datum.parentAndGrandGrandGrandParent",
+            "as": "linkToLevel6"
+          }
+        ]
+      },
+      {
+        "name": "isolatedLevel6",
+        "source": "mainDataWithFirstParentInfo",
+        "transform": [
+          {
+            "type": "project",
+            "fields": [
+              "level5",
+              "level6",
+              "value",
+              "firstLevelNodesId",
+              "level4",
+              "level3",
+              "level2",
+              "level1"
+            ],
+            "as": [
+              "parent",
+              "currentNode",
+              "value",
+              "firstLevelNodesId",
+              "level4",
+              "level3",
+              "level2",
+              "level1"
+            ]
+          },
+          {
+            "type": "aggregate",
+            "groupby": [
+              "parent",
+              "currentNode",
+              "firstLevelNodesId",
+              "level4",
+              "level3",
+              "level2",
+              "level1"
+            ],
+            "fields": ["value"],
+            "ops": ["sum"],
+            "as": ["value"]
+          },
+          { "type": "filter", "expr": "datum.currentNode" },
+          { "type": "filter", "expr": "datum.parent" },
+          {
+            "type": "formula",
+            "expr": "toString(datum.parent)+toString(datum.level4)+toString(datum.level3)+toString(datum.level2)+toString(datum.level1)",
+            "as": "parentAndGrandGrandGrandGrandParent"
+          },
+          {
+            "type": "lookup",
+            "from": "isolatedLevel5",
+            "key": "linkToLevel6",
+            "fields": ["parentAndGrandGrandGrandGrandParent"],
+            "values": ["currentNodeAndAncestors"],
+            "as": ["ancestors"]
+          },
+          { "type": "identifier", "as": "pseudoKey" },
+          {
+            "type": "formula",
+            "expr": "datum.currentNode+datum.ancestors+datum.pseudoKey",
+            "as": "currentNodeAndAncestors"
+          },
+          {
+            "type": "formula",
+            "expr": "datum.currentNode+datum.parentAndGrandGrandGrandGrandParent",
+            "as": "linkToLevel7"
+          }
+        ]
+      },
+      // Merging of levels. 
+      {
+        "name": "mergedlevels",
+        "source": [
+          "isolatedLevel1",
+          "isolatedLevel2",
+          "isolatedLevel3",
+          "isolatedLevel4",
+          "isolatedLevel5",
+          "isolatedLevel6",
+          "rootNode"
+        ],
+        "transform": [
+          {
+            "type": "formula",
+            "expr": "toString(datum.currentNode) +toString(datum.parent)",
+            "as": "rowKey"
+          }
+        ]
+      },
+      {
+        "name": "parents",
+        "source": ["mergedlevels"],
+        "transform": [{ "type": "project", "fields": ["ancestors"] }]
+      },
+      {
+        "name": "mergedlevelsFinal",
+        "source": [
+          "isolatedLevel1",
+          "isolatedLevel2",
+          "isolatedLevel3",
+          "isolatedLevel4",
+          "isolatedLevel5",
+          "isolatedLevel6",
+          "rootNode"
+        ],
+        "transform": [
+          {
+            "type": "formula",
+            "as": "value",
+            "expr": "!indata('parents','ancestors',datum.currentNodeAndAncestors)? datum.value:''"
+          },
+          {
+            "type": "formula",
+            "expr": "toString(datum.currentNodeAndAncestors)",
+            "as": "currentNodeAndAncestors"
+          },
+          {
+            "type": "formula",
+            "expr": "toString(datum.ancestors)",
+            "as": "ancestors"
+          },
+          {
+            "type": "filter",
+            "expr": "!test(/isShowInTooltip/, datum.currentNode)"
+          }
+        ]
+      },
+      // Define tree structure. 
+      {
+        "name": "tree_original",
+        "source": ["mergedlevelsFinal"],
+        "transform": [
+          {
+            "type": "stratify",
+            "key": "currentNodeAndAncestors",
+            "parentKey": "ancestors"
+          },
+          {
+            "type": "partition",
+            "field": "value",
+            "sort": { "field": "value" },
+            "size": [{ "signal": "2 * PI" }, { "signal": "sizeRef" }],
+            "as": ["a0", "r0", "a1", "r1", "depth", "children"]
+          },
+          {
+            "type": "formula",
+            "expr": "!datum.children?datum.value:''",
+            "as": "value"
+          },
+          {
+            "type": "filter",
+            "expr": "!test(/isShowInTooltip/, datum.currentNodeAndAncestors)"
+          },
+          {
+            "type": "formula",
+            "expr": "toString(datum.currentNode) +toString(datum.parent)",
+            "as": "rowKey"
+          },
+          {
+            "type": "lookup",
+            "from": "mergedlevels",
+            "key": "rowKey",
+            "fields": ["rowKey"],
+            "values": ["value"],
+            "as": ["aggregatedValue"]
+          }
+        ]
+      },
+      {
+        "name": "tree_withoutRoot",
+        "source": ["tree_original"],
+        "transform": [
+          { "type": "filter", "expr": "datum.depth>0" },
+          {
+            "type": "formula",
+            "expr": "toString(datum.currentNode) +toString(datum.parent)",
+            "as": "rowKey"
+          },
+          {
+            "type": "lookup",
+            "from": "mergedlevels",
+            "key": "rowKey",
+            "fields": ["rowKey"],
+            "values": ["value"],
+            "as": ["aggregatedValue"]
+          },
+          {
+            "type": "formula",
+            "expr": "treeAncestors('tree_original',datum.currentNodeAndAncestors)",
+            "as": "myTreeAncestorList"
+          },
+          {
+            "type": "formula",
+            "expr": "treeAncestors('tree_original', datum.currentNode)",
+            "as": "currentLevel"
+          }
+        ]
+      },
+      {
+        "name": "nodeLabels",
+        "source": "tree_withoutRoot",
+        "transform": [
+          { "type": "filter", "expr": "datum.currentNode!=='rootID'" },
+          { "type": "filter", "expr": "datum.a1-datum.a0>0.1" },
+          {
+            "type": "project",
+            "fields": [
+              "currentNode",
+              "r0",
+              "a0",
+              "r1",
+              "a1",
+              "aggregatedValue",
+              "firstLevelNodesId",
+              "depth",
+              "myTreeAncestorList"
+            ],
+            "as": [
+              "currentNode",
+              "r0",
+              "a0",
+              "r1",
+              "a1",
+              "aggregatedValue",
+              "firstLevelNodesId",
+              "depth",
+              "myTreeAncestorList"
+            ]
+          }
+        ]
+      }
+    ],
+    // COLOR SCALE. 
+    "scales": [
+      {
+        "name": "color",
+        "type": "ordinal",
+        "domain": { "data": "tree_original", "field": "firstLevelNodesId" },
+        "range": { "scheme": "viridis" }
+      }
+    ],
+    // Settings for marks.
+    "marks": [
+      {
+        "name": "arcMarks",
+        "type": "arc",
+        "from": { "data": "tree_withoutRoot" },
+        "encode": {
+          // Circular marks. 
+          "enter": {
+            "xc": { "signal": "centerX" },
+            "yc": { "signal": "centerY / 2" },
+            "fill": { "scale": "color", "field": "firstLevelNodesId" }
+          },
+          // Mark settings. 
+          "update": {
+            "xc": { "signal": "centerX" },
+            "yc": { "signal": "centerY" },
+            "startAngle": { "signal": "datum.a0+0 " },
+            "endAngle": { "signal": "datum.a1 " },
+            "innerRadius": { "signal": "datum.r0  " },
+            "outerRadius": { "signal": "datum.r1 " },
+            // Color of stroke borders of elements not highlihgted. 
+            "stroke": { "value": "#FFFFFF00" },
+            "strokeWidth": { "value": 0.5 },
+            "zindex": { "value": 0 },
+            // Default opacity and hovered opacity. 
+            "fillOpacity": [
+              // Default opacity.
+              {
+                "test": "indata('hoveredTextDetail','nodeToCheckIfParentOfCurrentNode',datum.currentNodeAndAncestors)||indata('hoveredArcDetail','nodeToCheckIfParentOfCurrentNode',datum.currentNodeAndAncestors)",
+                "value": 1
+              },
+              // Opacity of other elements when not hovered over them.  
+              {
+                "test": "((isHoveredOnArc==true)||(isHoveredOnText==true))&&!indata('hoveredArcDetail','nodeToCheckIfParentOfCurrentNode',datum.currentNodeAndAncestors)",
+                "value": 0.75
+              }
+            ]
+          },
+          // Hovering highlight. For outmost level add tooltip.
+          "hover": {
+            "stroke": { "value": "#fde725" }, // color based on https://waldyrious.net/viridis-palette-generator/
+            "strokeWidth": { "value": 2 },
+            "zindex": { "value": 1 },
+            "tooltip": {
+              //"signal": "datum.parent + ' -> ' + datum.currentNode + ': ' + datum.value"
+              "signal": "'Price index for ' + datum.currentNode + ': ' + datum.value"
+            }
+          }
+        }
+      },
+      // HEADER.
+      {
+        "type": "text",
+        "name": "alp-theme-header-fill",
+        "encode": {
+          "enter": { "align": { "value": "center" }, "baseline": { "value": "top" } },
+          "update": {
+            "x": { "signal": "centerX" },
+            "y": { "signal": "5" },
+            "text": { "signal": "title" },
+            "fontSize": { "signal": "titleFont" }
+          }
+        }
+      },
+      // TEXT LABELS ON THE VIS
+      {
+        "type": "text",
+        "from": { "data": "nodeLabels" },
+        "encode": {
+          "enter": {
+            "text": { "field": "currentNode" },
+            "fontSize": { "signal": "fontScale" },
+            "baseline": { "value": "middle" },
+            "align": { "value": "center" },
+            "limit": { "signal": "(datum.r1-datum.r0)*0.9" },
+            "fill": { "value": "white" }
+          },
+          "update": {
+            "x": { "signal": "centerX" },
+            "y": { "signal": "centerY" },
+            "limit": { "signal": "(datum.r1-datum.r0)*0.9" },
+            "radius": { // How far away from the center. 
+              "signal": "(datum['r0'] == 0 ? 0 : datum['r0'] + datum['r1']) / 2"
+            },
+            "theta": { "signal": "(datum['a0'] + datum['a1']) / 2" },
+            "angle": { // Where on the rotation. (Calculate middle). 
+              "signal": "datum['r0'] == 0 ? 0 : ((datum['a0'] + datum['a1']) / 2) * 180 / PI + (inrange(((datum['a0'] + datum['a1']) / 2) % (2 * PI), [0, PI]) ? 270 : 90)"
+            },
+            "fontWeight": { "value": "normal" }
+          }
+        }, "interactive": false // Makes text hoverable. 
+      }
+    ]
   };
 
   // Embed the visualization in the container with id `vis`
-  vegaEmbed('#vis', vlSpec);
-
-
-
+  vegaEmbed('#vis', vlSpec)
 </script>
+
 <div id="vis2"></div>
-<script type="module"> 
+<!-- backend data fetching -->
+<script type="module">
   import axios from 'https://cdn.skypack.dev/axios';
   function csvToArray(str, delimiter = ",") {
-  const headers = str.slice(0, str.indexOf("\n")).split(delimiter);
-  const rows = str.slice(str.indexOf("\n") + 1).split("\n");
-  const arr = rows.map(function (row) {
-    const values = row.split(delimiter);
-    const el = headers.reduce(function (object, header, index) {
-      object[header] = values[index];
-      return object;
-    }, {});
-    return el;
-  });
-  return arr;
-}
+    const headers = str.slice(0, str.indexOf("\n")).split(delimiter);
+    const rows = str.slice(str.indexOf("\n") + 1).split("\n");
+    const arr = rows.map(function (row) {
+      const values = row.split(delimiter);
+      const el = headers.reduce(function (object, header, index) {
+        object[header] = values[index];
+        return object;
+      }, {});
+      return el;
+    });
+    return arr;
+  }
 
-
-  function fillYear(year,start,end){
+  function fillYear(year, start, end) {
     let intStart = parseInt(start)
     let yearList = [];
     for (let i = intStart; i <= end; i++) {
-      if(i>9){ yearList.push(year + "M" + i)} else yearList.push(year + "M" + "0" + i)
-  } 
+      if (i > 9) { yearList.push(year + "M" + i) } else yearList.push(year + "M" + "0" + i)
+    }
     return yearList
   }
 
-  function fromToListCreator(from, to){
-      let list = [];
-      from = from.split('M');
-      to = to.split('M');
-      console.log("from")
-      console.log(from)
-      console.log("to")
-      console.log(to)
-      if(from[0]==to[0]){
-        if(from[1]<to[1]){
-        return fillYear(from[0],from[1],to[1])}
-      } else if (from[0]<to[0]) {
-          list = list.concat(fillYear(from[0],from[1],"12"))
-          for (let i = parseInt(from[0])+1; i < to[0]; i++) {
-              list = list.concat(fillYear(i,"01","12"))
-          }
-          list = list.concat(fillYear(to[0],"01",to[1]))
-      } 
-      console.log("list")
-      console.log(list)
-      return list
+  function fromToListCreator(from, to) {
+    let list = [];
+    from = from.split('M');
+    to = to.split('M');
+    console.log("from")
+    console.log(from)
+    console.log("to")
+    console.log(to)
+    if (from[0] == to[0]) {
+      if (from[1] < to[1]) {
+        return fillYear(from[0], from[1], to[1])
+      }
+    } else if (from[0] < to[0]) {
+      list = list.concat(fillYear(from[0], from[1], "12"))
+      for (let i = parseInt(from[0]) + 1; i < to[0]; i++) {
+        list = list.concat(fillYear(i, "01", "12"))
+      }
+      list = list.concat(fillYear(to[0], "01", to[1]))
+    } 
+    console.log("list")
+    console.log(list)
+    return list
   }
 
-  function fetchData(slectedTabel){
+  function fetchData(slectedTabel) {
     return axios.post("https://api.statbank.dk/v1/data", {
-   "table": slectedTabel,
-   "format": "CSV",
-   "variables": [
-      {
-         "code": "ENHED",
-         "values": [
+      "table": slectedTabel,
+      "format": "CSV",
+      "variables": [
+        {
+          "code": "ENHED",
+          "values": [
             "100"
-         ]
-      },
-      {
-         "code": "TID",
-         "values": [
+          ]
+        },
+        {
+          "code": "TID",
+          "values": [
             "2001*",
             "2002*"
-         ]
-      },
-      {
-         "code": "VareGR",
-         "values": [
+          ]
+        },
+        {
+          "code": "VareGR",
+          "values": [
             "000000"
-         ]
-      }
-   ]
+          ]
+        }
+      ]
     })
-  .then(function (response) {
-    return response
-    
-  })
-   
+      .then(function (response) {
+        return response
+      })
   }
 
-
-  const FetchDataPromisePris111 = new Promise((value) => {value(fetchData("PRIS111"))
+  const FetchDataPromisePris111 = new Promise((value) => {
+    value(fetchData("PRIS111"))
   })
 
-  FetchDataPromisePris111.then((value) => {console.log("value")
+  FetchDataPromisePris111.then((value) => {
+    console.log("value")
     const data = csvToArray(value.data)
     console.log(data)
-    
-    
-    
-    }
-  )
-  console.log(fromToListCreator("2001M01","2010M06"))
+  })
 
+  console.log(fromToListCreator("2001M01", "2010M06"))
 
-  function twoArrayToVegaObjects(labels,data){
-    const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i],b[i]])
-    const Unlabeleddata = zip(labels,data)
+  function twoArrayToVegaObjects(labels, data) {
+    const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i], b[i]])
+    const Unlabeleddata = zip(labels, data)
     var labeledData = []
     Unlabeleddata.forEach((aData) => {
-        labeledData.push({a : aData[0], b : aData[1]})
+      labeledData.push({ a: aData[0], b: aData[1] })
     })
     return labeledData
   }
 
-  
-
-
-
-  const myPromise = new Promise((value) => {value(axios.get('/api/data'))
+  const myPromise = new Promise((value) => {
+    value(axios.get('/api/data'))
   })
   myPromise.then((value) => {
-    const labels = ["a", "b", "c", "d", "e","f"]
-    const data = twoArrayToVegaObjects(labels,value.data)
-    
+    const labels = ["a", "b", "c", "d", "e", "f"]
+    const data = twoArrayToVegaObjects(labels, value.data)
+
     vlSpec = {
-    $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
-    data: {
-      values: data
-    },
-    mark: 'bar',
-    encoding: {
-      y: { field: 'a', type: 'nominal' },
-      x: {
-        aggregate: 'average',
-        field: 'b',
-        type: 'quantitative',
-        axis: {
-          title: 'Average of b'
+      $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+      data: {
+        values: data
+      },
+      mark: 'bar',
+      encoding: {
+        y: { field: 'a', type: 'nominal' },
+        x: {
+          aggregate: 'average',
+          field: 'b',
+          type: 'quantitative',
+          axis: {
+            title: 'Average of b'
+          }
         }
       }
     }
-  }
-  vegaEmbed('#vis2', vlSpec)
-  .then((res) => res.view
-  .insert("labeledData", data)
-  .run())
-  }
-    )
+    vegaEmbed('#vis2', vlSpec, {
+      patch: (spec) => {
+        spec.signals.push({
+            "name": "barClick",
+            "value": 0,
+            "on": [{"events": "rect:mousedown", "update": "barClick + 1"}]
+        })
+        return spec;
+      }
+    })
+      .then((res) => {
+        res.view
+        .addSignalListener('barClick', console.log)
+        .insert("labeledData", data)
+        .run()})
+  })
 </script>
-
-<div class="slider">
-<input type="range" min="0" max="200" value="100" oninput="rangeValue.innerText = this.value">
-<p id="rangeValue"></p>
-</div>
