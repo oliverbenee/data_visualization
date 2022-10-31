@@ -44,6 +44,9 @@ app.get('/vegalitetest', (req, res) => {
   res.render('vegalitetest', {layout: 'main'})
 })
 
+app.get('/vegalite_with_js_terminal_output', (req, res) => {
+  res.render('vegalite_with_js_terminal_output', {layout: 'main'})
+})
 
 // https://blog.logrocket.com/data-visualization-d3-js-node-js/
 app.get('/api/data', (req, res) => {
