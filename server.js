@@ -48,6 +48,12 @@ app.get('/vegalite_with_js_terminal_output', (req, res) => {
   res.render('vegalite_with_js_terminal_output', {layout: 'main'})
 })
 
+app.post('/clickclick', (req, res) => {
+  var name = req.params.name
+  res.send('Backend response to POST request sent to clickclick')
+  console.log('log sent post to clickclick')
+})
+
 // https://blog.logrocket.com/data-visualization-d3-js-node-js/
 app.get('/api/data', (req, res) => {
   const data = [100, 50, 300, 40, 350, 250]; // assuming this is coming from the database

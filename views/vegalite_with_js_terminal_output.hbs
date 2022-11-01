@@ -8,7 +8,8 @@
     Useful information on generating click events in js using vega-lite. <a href="https://stackoverflow.com/questions/57707494/whats-the-proper-way-to-implement-a-custom-click-handler-in-vega-lite">https://stackoverflow.com/questions/57707494/whats-the-proper-way-to-implement-a-custom-click-handler-in-vega-lite</a>
   </p>
 
-  <script>
+  <script type="module">
+  import axios from 'https://cdn.skypack.dev/axios';
     const spec = {
       "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
       "data": {
@@ -35,11 +36,19 @@
         spec.signals.push({
           "name": "barClick",
           "value": 0,
-          "on": [{ "events": "rect:mousedown", "update": "barClick + 1" }]
+          "on": [{ "events": "rect:mousedown", "update": "warn(datum)" }] // alternative is "update": "barClick + 1"
         })
         return spec;
       }
     }).then(result => {
-      result.view.addSignalListener('barClick', console.log);
+      result.view.addSignalListener('barClick', function(name, value){
+        console.log("frontend sending name: " + name)
+        console.log("value: " + JSON.stringify(value, null, 4))
+        axios.post("/clickclick", {
+          name: name
+        }).then(function(response){
+          console.log("response received from backend: " + JSON.stringify(response, null, 4))
+        })
+      })
     }).catch(console.warn);
   </script>
