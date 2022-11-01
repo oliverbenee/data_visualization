@@ -48,10 +48,16 @@ app.get('/vegalite_with_js_terminal_output', (req, res) => {
   res.render('vegalite_with_js_terminal_output', {layout: 'main'})
 })
 
+const bodyParser = require('body-parser')
+// parse application/json
+app.use(bodyParser.json())
+
 app.post('/clickclick', (req, res) => {
-  var name = req.params.name
-  res.send('Backend response to POST request sent to clickclick')
-  console.log('log sent post to clickclick')
+  console.log(JSON.stringify(req.body, null, 2))
+  var nodeToFind = JSON.stringify(req.body.node)
+  console.log('Backend received value on /clickclick: ' + nodeToFind)
+  const valueToReturn = [103.0, 103.6, 103.3, 103.2, 103.1, 103.2, 104.0, 103.6, 103.5, 103.7, 103.6, 103.4, 103.6, 104.2, 104.3]
+  res.json(valueToReturn)
 })
 
 app.get('/visualization', (req, res) => {

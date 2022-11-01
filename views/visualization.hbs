@@ -7,6 +7,7 @@
 <div id="waterfall" style="display: inline-block;"></div>
 
 <script type="module">
+  import axios from 'https://cdn.skypack.dev/axios';
   var sunburstSpec = {
     "$schema": "https://vega.github.io/schema/vega/v5.json",
     "description": "An example of a space-fulling radial layout for hierarchical data.",
@@ -883,85 +884,117 @@
       }
     ]
   };
-  var waterfallSpec = {
-    "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
-    "description": "Waterfall chart of combined price index",
-    "width": 400, "height": 250, "padding": 5,
-    "data": {
-      "values": [
-        { "year": "2020M01", "start": 103, "end": 103.0, "cat": "increase" },
-        { "year": "2020M02", "start": 103.0, "end": 103.6, "cat": "increase" },
-        { "year": "2020M03", "start": 103.6, "end": 103.3, "cat": "decrease" },
-        { "year": "2020M04", "start": 103.3, "end": 103.2, "cat": "decrease" },
-        { "year": "2020M05", "start": 103.2, "end": 103.1, "cat": "decrease" },
-        { "year": "2020M06", "start": 103.1, "end": 103.2, "cat": "increase" },
-        { "year": "2020M07", "start": 103.2, "end": 104.0, "cat": "increase" },
-        { "year": "2020M08", "start": 104.0, "end": 103.6, "cat": "decrease" },
-        { "year": "2020M09", "start": 103.6, "end": 103.5, "cat": "decrease" },
-        { "year": "2020M10", "start": 103.5, "end": 103.7, "cat": "increase" },
-        { "year": "2020M11", "start": 103.7, "end": 103.6, "cat": "decrease" },
-        { "year": "2020M12", "start": 103.6, "end": 103.4, "cat": "decrease" },
-        { "year": "2021M01", "start": 103.4, "end": 103.6, "cat": "increase" },
-        { "year": "2021M02", "start": 103.6, "end": 104.2, "cat": "increase" },
-        { "year": "Total", "start": 104.2, "end": 104.3, "cat": "increase" }
-      ]
-    },
-    "encoding": {
-      "x": {
-        "field": "year",
-        "type": "nominal"
-      },
-      "y": {
-        "field": "start",
-        "type": "quantitative",
-        "axis": { "title": "Total Consumer Price Index" },
-        "scale": { "domain": [103, 105] }
-      },
-      "y2": {
-        "field": "end",
-        "type": "quantitative"
-      }
-    },
-    "layer": [
-      {
-        "mark": "bar",
-        "encoding": {
-          "color": {
-            "field": "cat",
-            "type": "ordinal",
-            "legend": { "title": "" },
-            "scale": {
-              "domain": ["total", "increase", "decrease"],
-              "range": ["#ffffbf", "#91bfdb", "#fc8d59"]
+  vegaEmbed('#sunburst', sunburstSpec, {
+    patch: (sunburstSpec) => {
+      sunburstSpec.signals.push({
+        "name": "leafClick",
+        "on": [{ "events": "arc:mousedown", "update": "warn(datum)" }] // alternative is "update": "barClick + 1"
+      })
+      return sunburstSpec;
+    }
+  }).then(result => {
+    result.view.addSignalListener('leafClick', function (event, value) {
+      document.getElementById('waterfall').innerHTML=""
+      //console.log("click event: " + JSON.stringify(value, null, 4))
+      console.log("Clicked: " + value.currentNode)
+      axios.post("/clickclick", {
+        node: value.currentNode
+      }).then(function (response) {
+        //console.log("response received from backend: " + JSON.stringify(response, null, 4))
+        console.log("values: (" + response.data + ")")
+        var data = response.data
+        var incdec = []
+        var prev = 0;
+        data.forEach(function(element, index){
+          if(element > data[index-1]){ 
+            incdec[index-1] = "increase"
+          } else { 
+            incdec[index-1] = "decrease"
+          }
+          prev = element
+        })
+        var waterfallSpec = {
+          "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+          "description": "Waterfall chart of combined price index",
+          "width": 400, "height": 250, "padding": 5,
+          "data": {
+            "values": [
+              { "year": "2020M02", "start": data[0], "end": data[1], "cat": incdec[0] },
+              { "year": "2020M03", "start": data[1], "end": data[2], "cat": incdec[1] },
+              { "year": "2020M04", "start": data[2], "end": data[3], "cat": incdec[2] },
+              { "year": "2020M05", "start": data[3], "end": data[4], "cat": incdec[3] },
+              { "year": "2020M06", "start": data[4], "end": data[5], "cat": incdec[4] },
+              { "year": "2020M07", "start": data[5], "end": data[6], "cat": incdec[5] },
+              { "year": "2020M08", "start": data[6], "end": data[7], "cat": incdec[6] },
+              { "year": "2020M09", "start": data[7], "end": data[8], "cat": incdec[7] },
+              { "year": "2020M10", "start": data[8], "end": data[9], "cat": incdec[8] },
+              { "year": "2020M11", "start": data[9], "end": data[10], "cat": incdec[9] },
+              { "year": "2020M12", "start": data[10], "end": data[11], "cat": incdec[10] },
+              { "year": "2021M01", "start": data[11], "end": data[12], "cat": incdec[11] },
+              { "year": "2021M02", "start": data[12], "end": data[13], "cat": incdec[12] },
+              { "year": "2021M03", "start": data[13], "end": data[14], "cat": incdec[13] }
+              //,{ "year": "2022M03", "start": data[14], "end": data[14], "cat": "total"}
+            ]
+          },
+          "encoding": {
+            "x": {
+              "field": "year",
+              "type": "nominal"
+            },
+            "y": {
+              "field": "start",
+              "type": "quantitative",
+              "axis": { "title": "Total Consumer Price Index" },
+              "scale": { "domain": [103, 105] }
+            },
+            "y2": {
+              "field": "end",
+              "type": "quantitative"
+            }
+          },
+          "layer": [
+            {
+              "mark": "bar",
+              "encoding": {
+                "color": {
+                  "field": "cat",
+                  "type": "ordinal",
+                  "legend": { "title": "" },
+                  "scale": {
+                    // "total is removed. Used to be: (total,#481f70ff) "
+                    "domain": ["increase", "decrease"],
+                    "range": ["#018571", "#bf812d"]
+                  }
+                }
+              }
+            },
+            {
+              "mark": "text",
+              "encoding": {
+                "y": {
+                  "field": "end", "type": "quantitative"
+                },
+                "text": {
+                  "condition": { "test": "datum['cat'] == 'total'", "field": "start" },
+                  "field": "end", "type": "nominal"
+                },
+                "color": {
+                  "condition": { "test": "datum['cat'] != 'increase'", "value": "#000" },
+                  "value": "#000"
+                }
+              }
+            }
+          ],
+          "config": {
+            "text": {
+              "baseline": "bottom",
+              "align": "center",
+              "fontWeight": "bold"
             }
           }
         }
-      },
-      {
-        "mark": "text",
-        "encoding": {
-          "y": {
-            "field": "end", "type": "quantitative"
-          },
-          "text": {
-            "condition": { "test": "datum['cat'] == 'total'", "field": "start" },
-            "field": "end", "type": "nominal"
-          },
-          "color": {
-            "condition": { "test": "datum['cat'] != 'increase'", "value": "#000" },
-            "value": "#000"
-          }
-        }
-      }
-    ],
-    "config": {
-      "text": {
-        "baseline": "bottom",
-        "align": "center",
-        "fontWeight": "bold"
-      }
-    }
-  }
-  vegaEmbed('#sunburst', sunburstSpec)
-  vegaEmbed('#waterfall', waterfallSpec)
+        vegaEmbed('#waterfall', waterfallSpec)
+      })
+    })
+  }).catch(console.warn);
 </script>
