@@ -54,6 +54,10 @@ app.post('/clickclick', (req, res) => {
   console.log('log sent post to clickclick')
 })
 
+app.get('/visualization', (req, res) => {
+  res.render('visualization', {layout: 'main'})
+})
+
 // https://blog.logrocket.com/data-visualization-d3-js-node-js/
 app.get('/api/data', (req, res) => {
   const data = [100, 50, 300, 40, 350, 250]; // assuming this is coming from the database
