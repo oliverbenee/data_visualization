@@ -3,8 +3,11 @@
 <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.5.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.21.0"></script>
 
-<div id="sunburst" style="display: inline-block;"></div>
-<div id="waterfall" style="display: inline-block;"></div>
+<table> 
+  <tr><div id="sunburst" style="display: inline-block;"></div></tr>
+  <tr><div id="waterfall" style="display: inline-block;"></div></tr>
+</table>
+
 
 <script type="module">
   import axios from 'https://cdn.skypack.dev/axios';
@@ -17,7 +20,7 @@
     "autosize": "none",
     // Interactions. 
     "signals": [
-      { "name": "title", "value": "Price index distribution for various wares.", "description": "{'group':'Title'}" },
+      { "name": "title", "value": "Price weight distribution for various goods.", "description": "{'group':'Title'}" },
       {
         "name": "titleFont",
         "value": 25,
@@ -101,30 +104,30 @@
             "level6": "{'displayName':'Level 6', 'isOptional':true, 'dataType':'Any', 'doesRequireAggregate':false,isShowInTooltip:true}"
           },
           // BEGIN DATA. 
-          { "value": 102.9, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "brød" },
-          { "value": 102.6, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "kød" },
-          { "value": 109.6, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "fisk og skaldyr" },
-          { "value": 104.2, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "mælk ost og æg" },
-          { "value": 118.8, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "smør, margarine, olier" },
-          { "value": 106.9, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "frugt" },
-          { "value": 105.9, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "grøntsager" },
-          { "value": 101, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "sukkervarer" },
-          { "value": 103.4, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "andre fødevarer" },
-          { "value": 105.9, "level1": "fødevarer (ej alkohol)", "level2": "drikke", "level3": "kaffe, te, kakao" },
-          { "value": 98.1, "level1": "fødevarer (ej alkohol)", "level2": "drikke", "level3": "mineralvand, sodavand, juice" },
-          { "value": 103.2, "level1": "tobak og alkoholgenstande", "level2": "spiritus" },
-          { "value": 102.1, "level1": "tobak og alkoholgenstande", "level2": "vin" },
-          { "value": 105.1, "level1": "tobak og alkoholgenstande", "level2": "øl" },
-          { "value": 100.9, "level1": "tobak og alkoholgenstande", "level2": "tobak" },
-          { "value": 97.6, "level1": "beklædning og fodtøj", "level2": "materialer" },
-          { "value": 90.4, "level1": "beklædning og fodtøj", "level2": "beklædningsartikler" },
-          { "value": 105.2, "level1": "beklædning og fodtøj", "level2": "rensning, reparation" },
-          { "value": 105, "level1": "beklædning og fodtøj", "level2": "sko" },
-          { "value": 104.1, "level1": "boligbenyttelse, el og opvarmning", "level2": "husleje" },
-          { "value": 98.6, "level1": "boligbenyttelse, el og opvarmning", "level2": "vandforsyning" },
-          { "value": 90.3, "level1": "boligbenyttelse, el og opvarmning", "level2": "elektricitet" },
-          { "value": 85.3, "level1": "boligbenyttelse, el og opvarmning", "level2": "gas" },
-          { "value": 94.6, "level1": "boligbenyttelse, el og opvarmning", "level2": "fjernvarme" },
+          { "value": 1.595, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "brød" },
+          { "value": 2.5242, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "kød" },
+          { "value": 0.4741, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "fisk og skaldyr" },
+          { "value": 1.7458, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "mælk ost og æg" },
+          { "value": 0.3501, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "smør, margarine, olier" },
+          { "value": 0.861, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "frugt" },
+          { "value": 1.2233, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "grøntsager" },
+          { "value": 1.6951, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "sukkervarer" },
+          { "value": 0.5563, "level1": "fødevarer (ej alkohol)", "level2": "fødevarer", "level3": "andre fødevarer" },
+          { "value": 0.46, "level1": "fødevarer (ej alkohol)", "level2": "drikke", "level3": "kaffe, te, kakao" },
+          { "value": 1.093, "level1": "fødevarer (ej alkohol)", "level2": "drikke", "level3": "mineralvand, sodavand, juice" },
+          { "value": 0.2526, "level1": "tobak og alkoholgenstande", "level2": "spiritus" },
+          { "value": 1.11, "level1": "tobak og alkoholgenstande", "level2": "vin" },
+          { "value": 0.6103, "level1": "tobak og alkoholgenstande", "level2": "øl" },
+          { "value": 2.2969, "level1": "tobak og alkoholgenstande", "level2": "tobak" },
+          { "value": 0.0373, "level1": "beklædning og fodtøj", "level2": "beklædningstekstiler" },
+          { "value": 3.2044, "level1": "beklædning og fodtøj", "level2": "beklædningsartikler" },
+          { "value": 0.018, "level1": "beklædning og fodtøj", "level2": "rensning, reparation" },
+          { "value": 0.6533, "level1": "beklædning og fodtøj", "level2": "boligtekstiler" },
+          { "value": 8.2186, "level1": "boligbenyttelse, el og opvarmning", "level2": "husleje" },
+          { "value": 2.2391, "level1": "boligbenyttelse, el og opvarmning", "level2": "vandforsyning" },
+          { "value": 2.5475, "level1": "boligbenyttelse, el og opvarmning", "level2": "elektricitet" },
+          { "value": 0.6485, "level1": "boligbenyttelse, el og opvarmning", "level2": "gas" },
+          { "value": 1.6965, "level1": "boligbenyttelse, el og opvarmning", "level2": "fjernvarme" },
           { "value": 181.9, "level1": "kommunikation", "level2": "posttjenester" },
           { "value": 88.4, "level1": "kommunikation", "level2": "telefon og telefax" },
           { "value": 83.3, "level1": "kultur", "level2": "radio-tv" },
@@ -835,7 +838,7 @@
             "zindex": { "value": 1 },
             "tooltip": {
               //"signal": "datum.parent + ' -> ' + datum.currentNode + ': ' + datum.value"
-              "signal": "'Price index for ' + datum.currentNode + ': ' + datum.value"
+              "signal": "'CPI price weights for ' + datum.currentNode + ': ' + datum.value"
             }
           }
         }
@@ -884,6 +887,7 @@
       }
     ]
   };
+  // Good guide on interactions. https://stackoverflow.com/questions/57707494/whats-the-proper-way-to-implement-a-custom-click-handler-in-vega-lite
   vegaEmbed('#sunburst', sunburstSpec, {
     patch: (sunburstSpec) => {
       sunburstSpec.signals.push({
@@ -916,7 +920,7 @@
         var waterfallSpec = {
           "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
           "description": "Waterfall chart of combined price index",
-          "width": 400, "height": 250, "padding": 5,
+          "width": 500, "height": 350, "padding": 70,
           "data": {
             "values": [
               { "year": "2020M02", "start": data[0], "end": data[1], "cat": incdec[0] },
@@ -944,7 +948,7 @@
             "y": {
               "field": "start",
               "type": "quantitative",
-              "axis": { "title": "Total Consumer Price Index" },
+              "axis": { "title": "Consumer Price Index for: " + value.currentNode },
               "scale": { "domain": [103, 105] }
             },
             "y2": {
@@ -963,7 +967,7 @@
                   "scale": {
                     // "total is removed. Used to be: (total,#481f70ff) "
                     "domain": ["increase", "decrease"],
-                    "range": ["#018571", "#bf812d"]
+                    "range": ["#443a83ff", "#e3e418ff"]
                   }
                 }
               }
