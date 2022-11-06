@@ -320,7 +320,13 @@ function csvToArray(str, delimiter = ";") {
       {
          "code": "TID",
          "values": [
-            "*"
+            "2015*",
+            "2016*",
+            "2017*",
+            "2018*",
+            "2019*",
+            "2020*",
+            "2021*"
          ]
       },
       {
@@ -342,8 +348,14 @@ function csvToArray(str, delimiter = ";") {
     const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i],b[i]])
     const Unlabeleddata = zip(labels,data)
     var labeledData = []
+    var old = [0]
+    var incdec
     Unlabeleddata.forEach((aData) => {
-        labeledData.push({tid : aData[0], amount : aData[1]})
+      if(aData[1]<old[1]){
+        incdec="increase"
+      } else {incdec="decrease"}
+        labeledData.push({"year" : aData[0], "start" : old[1], "end": aData[1],"cat":incdec})
+        old = aData
     })
     return labeledData
    }
@@ -352,8 +364,8 @@ function csvToArray(str, delimiter = ";") {
   function tidTilVegaTid(oldTid){
     return 
   }
-
-  function buildSecond(table){
+  var view
+  function buildSecond(table,isFirstTime){
      console.log("creating table for " + table)
      const FetchDataPromisePris111 = new Promise((value) => {value(fetchData("PRIS111","000000"))})
      FetchDataPromisePris111.then((value) => {console.log("value")
@@ -372,6 +384,79 @@ function csvToArray(str, delimiter = ";") {
     var WaterFallData = twoArrayToVegaObjects(tid,indhold)
     
     console.log(WaterFallData)
+    
+    if(isFirstTime){
+    var waterfallSpec = {
+          "$schema": "https://vega.github.io/schema/vega-lite/v5.2.json",
+          "description": "Waterfall chart of combined price index",
+          "width": 2000, "height": 500, "padding": 0,
+          "data": {
+            "values": WaterFallData
+          },
+          "encoding": {
+            "x": {
+              "field": "year",
+              "type": "nominal"
+            },
+            "y": {
+              "field": "start",
+              "type": "quantitative",
+              "axis": { "title": "Consumer Price Index for: " + value.currentNode },
+              "scale": { "domain": [95, 115]}
+            },
+            "y2": {
+              "field": "end",
+              "type": "quantitative"
+            }
+          },
+          "layer": [
+            {
+              "mark": "bar",
+              "encoding": {
+                "color": {
+                  "field": "cat",
+                  "type": "ordinal",
+                  "legend": { "title": "" },
+                  "scale": {
+                    // "total is removed. Used to be: (total,#481f70ff) "
+                    "domain": ["increase", "decrease"],
+                    "range": ["#443a83ff", "#e3e418ff"]
+                  }
+                }
+              }
+            },
+            {
+              "mark": "text",
+              "encoding": {
+                "y": {
+                  "field": "end", "type": "quantitative"
+                },
+                "text": {
+                  "condition": { "test": "datum['cat'] == 'total'", "field": "start" },
+                  "field": "end", "type": "nominal"
+                },
+                "color": {
+                  "condition": { "test": "datum['cat'] != 'increase'", "value": "#000" },
+                  "value": "#000"
+                }
+              }
+            }
+          ],
+          "config": {
+            "text": {
+              "baseline": "bottom",
+              "align": "center",
+              "fontWeight": "bold"
+            }
+          }
+        }
+        vegaEmbed('#rightside', waterfallSpec)}
+      else{
+        console.log(document.getElementById('rightside'))
+        
+        //change('data', vega.changeset().remove(function(){return true}))
+      }  
+
 
     //create vega vis from WaterFallData here
 
@@ -384,9 +469,9 @@ function csvToArray(str, delimiter = ";") {
   vegaEmbed('#sunburst', sunburst).then(({spec, view}) => {
     view.addEventListener('mousedown', function (event, item) {
         console.log(item.datum.id)
-        buildSecond(item.datum.id)
+        buildSecond(item.datum.id,false)
     })
-  buildSecond("000000")
+  buildSecond("000000",true)
 })
 
 </script>
