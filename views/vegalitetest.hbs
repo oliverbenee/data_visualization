@@ -382,7 +382,7 @@ function csvToArray(str, delimiter = ";") {
      }
      ) 
     var WaterFallData = twoArrayToVegaObjects(tid,indhold)
-    
+    var setWithdata = {"values": WaterFallData}
     console.log(WaterFallData)
     
     if(isFirstTime){
@@ -390,9 +390,7 @@ function csvToArray(str, delimiter = ";") {
           "$schema": "https://vega.github.io/schema/vega-lite/v5.2.json",
           "description": "Waterfall chart of combined price index",
           "width": 2000, "height": 500, "padding": 0,
-          "data": {
-            "values": WaterFallData
-          },
+          "data": setWithdata,
           "encoding": {
             "x": {
               "field": "year",
@@ -450,11 +448,10 @@ function csvToArray(str, delimiter = ";") {
             }
           }
         }
-        vegaEmbed('#rightside', waterfallSpec)}
+        vegaEmbed('#rightside', waterfallSpec).then(p => window.view = p.view);}
       else{
-        console.log(document.getElementById('rightside'))
-        
-        //change('data', vega.changeset().remove(function(){return true}))
+         let changeset = vega.changeset().remove(() => true).insert(data);
+        window.view.change({WaterFallData }, changeset).run()
       }  
 
 
