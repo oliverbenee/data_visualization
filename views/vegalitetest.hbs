@@ -364,10 +364,11 @@ function csvToArray(str, delimiter = ";") {
   function tidTilVegaTid(oldTid){
     return 
   }
-  var view
+
+  var oldRightPic
   function buildSecond(table,isFirstTime){
      console.log("creating table for " + table)
-     const FetchDataPromisePris111 = new Promise((value) => {value(fetchData("PRIS111","000000"))})
+     const FetchDataPromisePris111 = new Promise((value) => {value(fetchData("PRIS111",table))})
      FetchDataPromisePris111.then((value) => {console.log("value")
      const data = csvToArray(value.data)
      
@@ -384,8 +385,6 @@ function csvToArray(str, delimiter = ";") {
     var WaterFallData = twoArrayToVegaObjects(tid,indhold)
     var setWithdata = {"values": WaterFallData}
     console.log(WaterFallData)
-    
-    if(isFirstTime){
     var waterfallSpec = {
           "$schema": "https://vega.github.io/schema/vega-lite/v5.2.json",
           "description": "Waterfall chart of combined price index",
@@ -448,11 +447,16 @@ function csvToArray(str, delimiter = ";") {
             }
           }
         }
-        vegaEmbed('#rightside', waterfallSpec).then(p => window.view = p.view);}
-      else{
-         let changeset = vega.changeset().remove(() => true).insert(data);
-        window.view.change({WaterFallData }, changeset).run()
-      }  
+      let el = document.createElement('div');
+      const rightside = document.getElementById("rightside");
+      if(isFirstTime){
+        rightside.appendChild(el)
+      }else {
+      rightside.replaceChild(el,oldRightPic)}
+      oldRightPic=el
+      vegaEmbed(el, waterfallSpec).then(p => window.view = p.view).catch(console.error);
+      
+
 
 
     //create vega vis from WaterFallData here
