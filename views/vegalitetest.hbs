@@ -346,16 +346,19 @@ function csvToArray(str, delimiter = ";") {
 
   function twoArrayToVegaObjects(labels,data){
     const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i],b[i]])
-    const Unlabeleddata = zip(labels,data)
-    var labeledData = []
-    var old = [0]
-    var incdec
+    const Unlabeleddata = zip(labels,data) // left is year, right is value.
+    var labeledData = [] // our final array. 
+    var previous = Unlabeleddata[0][1] // previous value. Default to 100. Format: year, value
+    var incdec // used for pushing. 
     Unlabeleddata.forEach((aData) => {
-      if(aData[1]<old[1]){
+      if(parseFloat(aData[1])>=parseFloat(previous)){
         incdec="increase"
-      } else {incdec="decrease"}
-        labeledData.push({"year" : aData[0], "start" : old[1], "end": aData[1],"cat":incdec})
-        old = aData
+      } else {
+        incdec="decrease"
+      }
+      console.log("adata: " + aData[1] + " previous: " +previous + "this is an: " + incdec)
+      labeledData.push({"year" : aData[0], "start" : previous, "end": aData[1],"cat" : incdec})
+      previous = aData[1]
     })
     return labeledData
    }
@@ -379,9 +382,11 @@ function csvToArray(str, delimiter = ";") {
           indhold.push(item["INDHOLD\r"].replace("\r","").replace(",","."))
           tid.push(item["TID"].replace("M","-"))
         }
-        
-     }
-     ) 
+     }) 
+    
+    var min = indhold.min()
+    var max = indhold.max()
+
     var WaterFallData = twoArrayToVegaObjects(tid,indhold)
     var setWithdata = {"values": WaterFallData}
     console.log(WaterFallData)
@@ -398,8 +403,8 @@ function csvToArray(str, delimiter = ";") {
             "y": {
               "field": "start",
               "type": "quantitative",
-              "axis": { "title": "Consumer Price Index for: " + value.currentNode },
-              "scale": { "domain": [95, 115]}
+              "axis": { "title": "Consumer Price Index for: " + table },
+              "scale": { "domain": [min, max]}
             },
             "y2": {
               "field": "end",
@@ -455,14 +460,6 @@ function csvToArray(str, delimiter = ";") {
       rightside.replaceChild(el,oldRightPic)}
       oldRightPic=el
       vegaEmbed(el, waterfallSpec).then(p => window.view = p.view).catch(console.error);
-      
-
-
-
-    //create vega vis from WaterFallData here
-
-    //vegaEmbed('#rightside', rightSide)
-     
     }
   )
   }
@@ -474,5 +471,13 @@ function csvToArray(str, delimiter = ";") {
     })
   buildSecond("000000",true)
 })
+
+Array.prototype.max = function() {
+  return Math.max.apply(null, this);
+};
+
+Array.prototype.min = function() {
+  return Math.min.apply(null, this);
+};
 
 </script>
