@@ -698,6 +698,7 @@ function csvToArray(str, delimiter = ";") {
       } else {
         incdec="decrease"
       }
+      console.log("adata: " + aData[1] + " previous: " +previous + "this is an: " + incdec)
       labeledData.push({"year" : aData[0], "start" : previous, "end": aData[1],"cat" : incdec})
       previous = aData[1]
     })
@@ -742,14 +743,236 @@ function csvToArray(str, delimiter = ";") {
     }
     } else {table = "*0000"}
     }
-    console.log(table)
+    console.log("table: " + table)
     const FetchDataPromisePris111 = new Promise((value) => {value(fetchDataCurrentYear("PRIS111",table))})
     FetchDataPromisePris111.then((value) => {
-      console.log(csvToArray(value.data))
-     
+      console.log("value")
+      const data = csvToArray(value.data)
+      // TODO: FORMAT PROPERLY. 
+      var indholdToInsert = []
+      console.log(data)
+      data.forEach(item => {
+        if(item["INDHOLD\r"]!=undefined){
+          var add = item["INDHOLD\r"].replace("\r","").replace(",",".")
+          indholdToInsert.push(add)
+        }
+      })
+      console.log("to insert:")
+      console.log(indholdToInsert)
+      console.log("and find its subcategories")
 
-      //create heatmap
-      var heatSpec = {}
+      //TODO: format to vega object and add sub-categories. 
+
+    //create heatmap
+    var heatSpec = {
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "A heatmap showing the consumer price index for selected goods. ",
+  "width": 800, "height": 500, "padding": 5,
+  "title": {
+    "text": "Price index Heat Map for subcategories of: " + table,
+    "anchor": "middle",
+    "fontSize": 16,
+    "frame": "group",
+    "offset": 4
+  },
+  "signals": [
+    {
+      "name": "palette", "value": "DarkGold",
+      "bind": {
+        "input": "select",
+        "options": [
+          //"Turbo",
+          //"Viridis",
+          //"Magma",
+          //"Inferno",
+          //"Plasma",
+          "Cividis",
+          //"DarkBlue",
+          "DarkGold",
+          //"DarkGreen",
+          "DarkMulti",
+          //"DarkRed",
+          "LightGreyRed",
+          "LightGreyTeal",
+          "LightMulti",
+          "LightOrange",
+          "LightTealBlue",
+          "Blues",
+          "Browns",
+          "Greens",
+          "Greys",
+          "Oranges",
+          "Purples",
+          "Reds",
+          "TealBlues",
+          "Teals",
+          //"WarmGreys",
+          "BlueOrange",
+          "BrownBlueGreen",
+          "PurpleGreen",
+          "PinkYellowGreen",
+          "PurpleOrange",
+          "RedBlue",
+          "RedGrey",
+          "RedYellowBlue",
+          "RedYellowGreen",
+          "BlueGreen",
+          //"BluePurple",
+          "GoldGreen",
+          "GoldOrange",
+          "GoldRed",
+          "GreenBlue",
+          "OrangeRed",
+          "PurpleBlueGreen",
+          //"PurpleBlue",
+          "PurpleRed",
+          "RedPurple",
+          "YellowGreenBlue",
+          "YellowGreen",
+          "YellowOrangeBrown",
+          "YellowOrangeRed"
+        ]
+      }
+    },
+    {
+      "name": "reverse", "value": false, "bind": {"input": "checkbox"}
+    }
+  ],
+  // data. Currently only test values + UNIX dates. TODO: UPDATE DATA CORRECTLY. AND UPDATE DOMAIN. 
+  "data": [
+    {
+      "name": "data",
+      "values": [
+        {"date": "2020-01-01T01:00:00", "priceindex": 4.0, "category": 1},
+        {"date": "2020-02-02T01:00:00", "priceindex": 5.0, "category": 1},
+        {"date": "2020-03-03T01:00:00", "priceindex": 6.0, "category": 1},
+        {"date": "2020-04-04T01:00:00", "priceindex": 7.0, "category": 1},
+        {"date": "2020-05-05T01:00:00", "priceindex": 8.0, "category": 1},
+        {"date": "2020-06-06T01:00:00", "priceindex": 9.0, "category": 1},
+        {"date": "2020-07-07T01:00:00", "priceindex": 10.0, "category": 1},
+        {"date": "2020-08-08T01:00:00", "priceindex": 11.0, "category": 1},
+        {"date": "2020-09-09T01:00:00", "priceindex": 12.0, "category": 1},
+        {"date": "2020-10-10T01:00:00", "priceindex": 13.0, "category": 1},
+        {"date": "2020-11-10T01:00:00", "priceindex": 13.0, "category": 1},
+        {"date": "2020-12-10T01:00:00", "priceindex": 13.0, "category": 1},
+        {"date": "2021-01-01T01:00:00", "priceindex": 4.0, "category": 1},
+        {"date": "2021-02-02T01:00:00", "priceindex": 5.0, "category": 1},
+        {"date": "2021-03-03T01:00:00", "priceindex": 6.0, "category": 1},
+        {"date": "2021-04-04T01:00:00", "priceindex": 7.0, "category": 1},
+        {"date": "2021-05-05T01:00:00", "priceindex": 8.0, "category": 1},
+        {"date": "2021-06-06T01:00:00", "priceindex": 9.0, "category": 1},
+        {"date": "2021-07-07T01:00:00", "priceindex": 10.0, "category": 1},
+        {"date": "2021-08-08T01:00:00", "priceindex": 11.0, "category": 1},
+        {"date": "2021-09-09T01:00:00", "priceindex": 12.0, "category": 1},
+        {"date": "2021-10-10T01:00:00", "priceindex": 13.0, "category": 1},
+        {"date": "2021-11-10T01:00:00", "priceindex": 13.0, "category": 1},
+        {"date": "2021-12-10T01:00:00", "priceindex": 13.0, "category": 1},
+        {"date": "2022-01-01T01:00:00", "priceindex": 4.0, "category": 1},
+        {"date": "2022-02-02T01:00:00", "priceindex": 5.0, "category": 1},
+        {"date": "2022-03-03T01:00:00", "priceindex": 6.0, "category": 1},
+        {"date": "2022-04-04T01:00:00", "priceindex": 7.0, "category": 1},
+        {"date": "2022-05-05T01:00:00", "priceindex": 8.0, "category": 1},
+        {"date": "2022-06-06T01:00:00", "priceindex": 9.0, "category": 1},
+        {"date": "2022-07-07T01:00:00", "priceindex": 10.0, "category": 1},
+        {"date": "2022-08-08T01:00:00", "priceindex": 11.0, "category": 1},
+        {"date": "2022-09-09T01:00:00", "priceindex": 12.0, "category": 1},
+        {"date": "2022-10-10T01:00:00", "priceindex": 13.0, "category": 1},
+        {"date": "2022-11-10T01:00:00", "priceindex": 13.0, "category": 1},
+        {"date": "2022-12-10T01:00:00", "priceindex": 13.0, "category": 1},
+        {"date": "2022-12-10T01:00:00", "priceindex": 13.0, "category": 1},
+        {"date": "2022-12-10T01:00:00", "priceindex": 13.0, "category": 1.1},
+        {"date": "2020-01-01T01:00:00", "priceindex": 13.0, "category": 2},
+        {"date": "2020-02-02T01:00:00", "priceindex": 12.0, "category": 2},
+        {"date": "2020-03-03T01:00:00", "priceindex": 11.0, "category": 2},
+        {"date": "2020-04-04T01:00:00", "priceindex": 10.0, "category": 2},
+        {"date": "2020-05-05T01:00:00", "priceindex": 9.0, "category": 2},
+        {"date": "2020-06-06T01:00:00", "priceindex": 8.0, "category": 2},
+        {"date": "2020-07-07T01:00:00", "priceindex": 7.0, "category": 2},
+        {"date": "2020-08-08T01:00:00", "priceindex": 6.0, "category": 2},
+        {"date": "2020-09-09T01:00:00", "priceindex": 5.0, "category": 2},
+        {"date": "2020-10-10T01:00:00", "priceindex": 4.0, "category": 2},
+        {"date": "2020-11-10T01:00:00", "priceindex": 3.0, "category": 2},
+        {"date": "2020-12-10T01:00:00", "priceindex": 2.0, "category": 2},
+        {"date": "2022-11-10T01:00:00", "priceindex": 12.0, "category": 1.1}
+        
+      ],
+      "format": {"parse": {"priceindex": "number", "date": "date"}},
+      "transform": [
+        { "type": "formula", "as": "day",
+          "expr": "datetime(year(datum.date), month(datum.date), date(datum.date))"},
+        {"type": "formula", "as": "month", "expr": "datetime(year(datum.date), month(datum.date))"}
+      ]
+    }
+  ],
+  "scales": [
+    { // X-axis.
+      "name": "x",
+      "type": "time",
+      "domain": {"data": "data", "field": "month"},
+      "range": "width"
+    },
+    { // Y-axis. 
+      "name": "y",
+      "type": "band",
+      "domain": [
+        1, 1.1, 2, 3, 4, 5, 6, 7, 8, 9 ,10, 11, 12, 13.1, 13.2, 14.1, 15.1],
+      "range": "height"
+    },
+    {
+      "name": "color",
+      "type": "linear",
+      "range": {"scheme": {"signal": "palette"}},
+      "domain": {"data": "data", "field": "priceindex"},
+      "reverse": {"signal": "reverse"},
+      "zero": false, "nice": true
+    }
+  ],
+  "axes": [
+    {"orient": "bottom", "scale": "x", "domain": false, "title": "Month", "format": "%b"},
+    {
+      "orient": "left", "scale": "y", "domain": false, "title": "Category",
+      "encode": {
+        "labels": {
+          "update": {
+            "text": {"signal": "datum.value"}
+          }
+        }
+      }
+    }
+  ],
+  // Right side legend.
+  "legends": [
+    {
+      "fill": "color",
+      "type": "gradient",
+      "title": "Price index (100 = 2015)",
+      "titleFontSize": 12,
+      "titlePadding": 4,
+      "gradientLength": {"signal": "height - 16"},
+      // Move the legend further to the right. (change second number)
+      "offset": {"signal": "datum.orient === 'top' ? 30 : 50"}
+    }
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data": "data"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "field": "month"},
+          "y": {"scale": "y", "field": "category"},
+          "width": {"value": 24},//"value": 75},
+          "height": {"scale": "y", "band": 1},
+          "tooltip": {"signal": "'Price index for category ' + datum.category + ', ' + timeFormat(datum.date, '%b %Y') + ': ' + datum.priceindex"}
+        },
+        "update": {
+          "fill": {"scale": "color", "field": "priceindex"}
+        }
+      }
+    }
+  ]
+
+      }
       let el = document.createElement('div');
       const rightside = document.getElementById("rightside");
       if(isFirstTime){
@@ -852,6 +1075,7 @@ function csvToArray(str, delimiter = ";") {
       rightside.replaceChild(el,oldRightPic)}
       oldRightPic=el
       vegaEmbed(el, waterfallSpec).then(p => window.view = p.view).catch(console.error);
+      document.getElementById('rightside').scrollIntoView({ behavior: 'smooth', block: 'end'});
     }
   )
   }
