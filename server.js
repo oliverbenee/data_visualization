@@ -41,7 +41,7 @@ app.get('/barchart', (req, res) => {
 })
 
 app.get('/vegalitetest', (req, res) => {
-  res.render('vegalitetest', {layout: 'main'})
+  res.render('vegalitetest', {layout: 'vega'})
 })
 
 app.get('/vegalite_with_js_terminal_output', (req, res) => {
