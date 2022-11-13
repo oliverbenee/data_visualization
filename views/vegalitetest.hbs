@@ -654,6 +654,38 @@ function csvToArray(str, delimiter = ";") {
    
   }
 
+  function fetchDataCurrentYear(slectedTabel,VareGR){
+    return axios.post("https://api.statbank.dk/v1/data", {
+   "table": slectedTabel,
+   "format": "CSV",
+   "variables": [
+      {
+         "code": "ENHED",
+         "values": [
+            "100"
+         ]
+      },
+      {
+         "code": "TID",
+         "values": [
+            "2021*"
+         ]
+      },
+      {
+         "code": "VareGR",
+         "values": [
+            VareGR
+         ]
+      }
+   ]
+    })
+  .then(function (response) {
+    return response
+    
+  })
+   
+  }
+
   function twoArrayToVegaObjects(labels,data){
     const zip = (a, b) => Array.from(Array(Math.max(b.length, a.length)), (_, i) => [a[i],b[i]])
     const Unlabeleddata = zip(labels,data) // left is year, right is value.
@@ -698,14 +730,19 @@ function csvToArray(str, delimiter = ";") {
       
     }
     table=table + "*"
+    var running=true
+    while(running==true){
+      if(table.length<5){
+        table = table + "0"
+        
+      } else{running=false}
+    }
     }
     console.log(table)
-    const FetchDataPromisePris111 = new Promise((value) => {value(fetchData("PRIS111",table))})
+    const FetchDataPromisePris111 = new Promise((value) => {value(fetchDataCurrentYear("PRIS111",table))})
     FetchDataPromisePris111.then((value) => {
-      console.log("value")
+      console.log(csvToArray(value.data))
      
-
-    
 
       //create heatmap
       var heatSpec = {}
