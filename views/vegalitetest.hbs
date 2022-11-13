@@ -700,6 +700,12 @@ function csvToArray(str, delimiter = ";") {
     table=table + "*"
     }
     console.log(table)
+    const FetchDataPromisePris111 = new Promise((value) => {value(fetchData("PRIS111",table))})
+    FetchDataPromisePris111.then((value) => {
+      console.log("value")
+     
+
+    
 
       //create heatmap
       var heatSpec = {}
@@ -711,6 +717,7 @@ function csvToArray(str, delimiter = ";") {
       rightside.replaceChild(el,oldRightPic)}
       oldRightPic=el
       vegaEmbed(el, heatSpec).then(p => window.view = p.view).catch(console.error);
+   })
    }
   var oldRightPic
   function buildWaterFall(table,isFirstTime){
