@@ -729,14 +729,18 @@ function csvToArray(str, delimiter = ";") {
       } else {running=false}
       
     }
+    console.log(table)
+    if(!table.length == 0){
     table=table + "*"
     var running=true
-    while(running==true){
-      if(table.length<5){
+
+    while(running==true){ 
+      if(table.length<6){
         table = table + "0"
         
       } else{running=false}
     }
+    } else {table = "*0000"}
     }
     console.log(table)
     const FetchDataPromisePris111 = new Promise((value) => {value(fetchDataCurrentYear("PRIS111",table))})
