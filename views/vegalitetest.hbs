@@ -105,16 +105,17 @@
     <input class="switch-input"
             type="checkbox" id="ChangeHeat">
     <div class="switch-button">
-        <span class="switch-button-left">Show Subcatagories</span> 
-        <span class="switch-button-right">Show Index</span>
+        <span style="font-family: Arial, Helvetica, sans-serif" class="switch-button-left">Compare subcategories</span> 
+        <span style="font-family: Arial, Helvetica, sans-serif" class="switch-button-right">Show index trends</span>
     </div>
 </label>
 
 
 </div>
 <body>
-<div id="sunburst"></div>
+<center><div id="sunburst"></div>
 <div id="rightside"></div>
+</center>
 </body>
 <!-- Script for the visualization specification. --> 
 <script type="module">
@@ -123,8 +124,8 @@
   var sunburst = {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "description": "An example of a space-fulling radial layout for hierarchical data.",
-  "width": 1000,
-  "height": 1000,
+  "width": 600,
+  "height": 600,
   "padding": 0,
   "autosize": "none",
 
@@ -963,7 +964,9 @@ function csvToArray(str, delimiter = ";") {
           "y": {"scale": "y", "field": "category"},
           "width": {"value": 24},//"value": 75},
           "height": {"scale": "y", "band": 1},
-          "tooltip": {"signal": "'Price index for category ' + datum.category + ', ' + timeFormat(datum.date, '%b %Y') + ': ' + datum.priceindex"}
+          "tooltip": {
+            "signal": "{'Category': datum.category, 'Consumer Price Index': datum.priceindex}"
+          }
         },
         "update": {
           "fill": {"scale": "color", "field": "priceindex"}
@@ -981,6 +984,7 @@ function csvToArray(str, delimiter = ";") {
       rightside.replaceChild(el,oldRightPic)}
       oldRightPic=el
       vegaEmbed(el, heatSpec).then(p => window.view = p.view).catch(console.error);
+      document.getElementById('rightside').scrollIntoView({ behavior: 'smooth', block: 'end'});
    })
    }
   var oldRightPic
@@ -1008,7 +1012,7 @@ function csvToArray(str, delimiter = ";") {
     var waterfallSpec = {
           "$schema": "https://vega.github.io/schema/vega-lite/v5.2.json",
           "description": "Waterfall chart of combined price index",
-          "width": 2000, "height": 500, "padding": 0,
+          "width": 1350, "height": 500, "padding": 0,
           "data": setWithdata,
           "encoding": {
             "x": {
