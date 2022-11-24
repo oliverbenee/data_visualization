@@ -954,6 +954,7 @@ function csvToArray(str, delimiter = ";") {
       "offset": {"signal": "datum.orient === 'top' ? 30 : 50"}
     }
   ],
+  "params": [{"name": "highlight", "select": "point"}],
   "marks": [
     {
       "type": "rect",
@@ -969,7 +970,13 @@ function csvToArray(str, delimiter = ";") {
           }
         },
         "update": {
-          "fill": {"scale": "color", "field": "priceindex"}
+          "fill": {"scale": "color", "field": "priceindex"},
+          // Update based on selections in params. 
+          "opacity": {
+            "condition": {"param": "highlight", "value": 0.5},
+            "value": 1
+          },
+          "order": {"condition": {"param": "highlight", "value": 1}, "value": 0}
         }
       }
     }
@@ -1012,12 +1019,18 @@ function csvToArray(str, delimiter = ";") {
     var waterfallSpec = {
           "$schema": "https://vega.github.io/schema/vega-lite/v5.2.json",
           "description": "Waterfall chart of combined price index",
+          "vconcat":[{
           "width": 1350, "height": 500, "padding": 0,
           "data": setWithdata,
           "encoding": {
             "x": {
               "field": "year",
-              "type": "nominal"
+              "type": "nominal",
+              "scale": { 
+                "domain": { 
+                  "param": "brush" 
+                } 
+              }
             },
             "y": {
               "field": "start",
@@ -1028,8 +1041,11 @@ function csvToArray(str, delimiter = ";") {
             "y2": {
               "field": "end",
               "type": "quantitative"
-            }
+            }          
           },
+          "transform": [{
+              "filter": {"param": "brush"}
+            }],
           "layer": [
             {
               "mark": "bar",
@@ -1037,11 +1053,15 @@ function csvToArray(str, delimiter = ";") {
                 "color": {
                   "field": "cat",
                   "type": "ordinal",
-                  "legend": { "title": "" },
                   "scale": {
                     // "total is removed. Used to be: (total,#481f70ff) "
                     "domain": ["increase", "decrease"],
                     "range": ["#443a83ff", "#e3e418ff"]
+                  }
+                },
+                "clip": {
+                  "domain": {
+                    "selection": "brush" 
                   }
                 }
               }
@@ -1062,7 +1082,65 @@ function csvToArray(str, delimiter = ";") {
                 }
               }
             }
-          ],
+          ]
+          }, { // The chart, where the brushing happens.
+          "width": 1350, "height": 100, "padding": 0,
+          "data": setWithdata,
+          "encoding": {
+            "x": {
+              "field": "year",
+              "type": "nominal"
+            },
+            "y": {
+              "field": "start",
+              "type": "quantitative",
+              "axis": { "title": " " },
+              "scale": { "domain": [min, max]}
+            },
+            "y2": {
+              "field": "end",
+              "type": "quantitative"
+            }
+          },
+          "layer": [
+            {
+              "mark": "bar",
+              "selection": {
+                "brush": { 
+                  "type": "interval", 
+                  "encodings": ["x"]
+                }
+              },
+              "encoding": {
+                "color": {
+                  "field": "cat",
+                  "type": "ordinal",
+                  "legend": { "title": "Brush"},
+                  "scale": {
+                    // "total is removed. Used to be: (total,#481f70ff) "
+                    "domain": ["increase", "decrease"],
+                    "range": ["#443a83ff", "#e3e418ff"]
+                  }
+                }
+              }
+            },
+            {
+              "mark": "text",
+              "encoding": {
+                "y": {
+                  "field": "end", "type": "quantitative"
+                },
+                "color": {
+                  "condition": { "test": "datum['cat'] != 'increase'", "value": "#000" },
+                  "value": "#000"
+                }
+              },
+              "update":{          
+                "opacity": {"value": 0}
+              }
+            }
+          ]
+          }], 
           "config": {
             "text": {
               "baseline": "bottom",
