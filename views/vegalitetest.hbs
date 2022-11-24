@@ -553,7 +553,7 @@
           "y": {"signal": "height /2"},
 
           "fill": {"scale": "color", "field": "id"},
-          "tooltip": {"signal": "datum.name + ' ' +  (datum.andel?  datum.andel:datum.size) + '%'"}
+          "tooltip": {"signal": "{'Category': datum.name, 'Weight in CPI': (datum.andel?datum.andel:datum.size)}"}
         },
         "update": {
           "startAngle": {"field": "a0"},
@@ -951,7 +951,7 @@ function csvToArray(str, delimiter = ";") {
           "width": {"value": 24},//"value": 75},
           "height": {"scale": "y", "band": 1},
           "tooltip": {
-            "signal": "{'Month': year(datum.day) + 'M' + month(datum.day), 'Category': datum.category, 'Consumer Price Index': datum.priceindex}"
+            "signal": "{'Month': year(datum.day) + 'M' + month(datum.day), 'Category': datum.category, 'Consumer Price Index': datum.priceindex, 'Months are left-shifted!': 'M0 to M11'}"
           }
         },
         "update": {
