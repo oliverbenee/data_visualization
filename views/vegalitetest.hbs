@@ -763,6 +763,9 @@ function csvToArray(str, delimiter = ";") {
       console.log("and find its subcategories")
 
       //TODO: format to vega object and add sub-categories. 
+      var categories = [3121, 3122,3123]
+      var longestRowElementsTotal = categories.length // TODO: FIX
+      var barLength = 800/longestRowElementsTotal
 
     //create heatmap
     var heatSpec = {
@@ -844,63 +847,41 @@ function csvToArray(str, delimiter = ";") {
     {
       "name": "data",
       "values": [
-        {"date": "2020-01-01T01:00:00", "priceindex": 4.0, "category": 1},
-        {"date": "2020-02-02T01:00:00", "priceindex": 5.0, "category": 1},
-        {"date": "2020-03-03T01:00:00", "priceindex": 6.0, "category": 1},
-        {"date": "2020-04-04T01:00:00", "priceindex": 7.0, "category": 1},
-        {"date": "2020-05-05T01:00:00", "priceindex": 8.0, "category": 1},
-        {"date": "2020-06-06T01:00:00", "priceindex": 9.0, "category": 1},
-        {"date": "2020-07-07T01:00:00", "priceindex": 10.0, "category": 1},
-        {"date": "2020-08-08T01:00:00", "priceindex": 11.0, "category": 1},
-        {"date": "2020-09-09T01:00:00", "priceindex": 12.0, "category": 1},
-        {"date": "2020-10-10T01:00:00", "priceindex": 13.0, "category": 1},
-        {"date": "2020-11-10T01:00:00", "priceindex": 13.0, "category": 1},
-        {"date": "2020-12-10T01:00:00", "priceindex": 13.0, "category": 1},
-        {"date": "2021-01-01T01:00:00", "priceindex": 4.0, "category": 1},
-        {"date": "2021-02-02T01:00:00", "priceindex": 5.0, "category": 1},
-        {"date": "2021-03-03T01:00:00", "priceindex": 6.0, "category": 1},
-        {"date": "2021-04-04T01:00:00", "priceindex": 7.0, "category": 1},
-        {"date": "2021-05-05T01:00:00", "priceindex": 8.0, "category": 1},
-        {"date": "2021-06-06T01:00:00", "priceindex": 9.0, "category": 1},
-        {"date": "2021-07-07T01:00:00", "priceindex": 10.0, "category": 1},
-        {"date": "2021-08-08T01:00:00", "priceindex": 11.0, "category": 1},
-        {"date": "2021-09-09T01:00:00", "priceindex": 12.0, "category": 1},
-        {"date": "2021-10-10T01:00:00", "priceindex": 13.0, "category": 1},
-        {"date": "2021-11-10T01:00:00", "priceindex": 13.0, "category": 1},
-        {"date": "2021-12-10T01:00:00", "priceindex": 13.0, "category": 1},
-        {"date": "2022-01-01T01:00:00", "priceindex": 4.0, "category": 1},
-        {"date": "2022-02-02T01:00:00", "priceindex": 5.0, "category": 1},
-        {"date": "2022-03-03T01:00:00", "priceindex": 6.0, "category": 1},
-        {"date": "2022-04-04T01:00:00", "priceindex": 7.0, "category": 1},
-        {"date": "2022-05-05T01:00:00", "priceindex": 8.0, "category": 1},
-        {"date": "2022-06-06T01:00:00", "priceindex": 9.0, "category": 1},
-        {"date": "2022-07-07T01:00:00", "priceindex": 10.0, "category": 1},
-        {"date": "2022-08-08T01:00:00", "priceindex": 11.0, "category": 1},
-        {"date": "2022-09-09T01:00:00", "priceindex": 12.0, "category": 1},
-        {"date": "2022-10-10T01:00:00", "priceindex": 13.0, "category": 1},
-        {"date": "2022-11-10T01:00:00", "priceindex": 13.0, "category": 1},
-        {"date": "2022-12-10T01:00:00", "priceindex": 13.0, "category": 1},
-        {"date": "2022-12-10T01:00:00", "priceindex": 13.0, "category": 1},
-        {"date": "2022-12-10T01:00:00", "priceindex": 13.0, "category": 1.1},
-        {"date": "2020-01-01T01:00:00", "priceindex": 13.0, "category": 2},
-        {"date": "2020-02-02T01:00:00", "priceindex": 12.0, "category": 2},
-        {"date": "2020-03-03T01:00:00", "priceindex": 11.0, "category": 2},
-        {"date": "2020-04-04T01:00:00", "priceindex": 10.0, "category": 2},
-        {"date": "2020-05-05T01:00:00", "priceindex": 9.0, "category": 2},
-        {"date": "2020-06-06T01:00:00", "priceindex": 8.0, "category": 2},
-        {"date": "2020-07-07T01:00:00", "priceindex": 7.0, "category": 2},
-        {"date": "2020-08-08T01:00:00", "priceindex": 6.0, "category": 2},
-        {"date": "2020-09-09T01:00:00", "priceindex": 5.0, "category": 2},
-        {"date": "2020-10-10T01:00:00", "priceindex": 4.0, "category": 2},
-        {"date": "2020-11-10T01:00:00", "priceindex": 3.0, "category": 2},
-        {"date": "2020-12-10T01:00:00", "priceindex": 2.0, "category": 2},
-        {"date": "2022-11-10T01:00:00", "priceindex": 12.0, "category": 1.1}
+        {"date": "2014-12", "priceindex": 4.0, "category": 3121},
+        {"date": "2015-01", "priceindex": 5.0, "category": 3121},
+        {"date": "2015-02", "priceindex": 6.0, "category": 3121},
+        {"date": "2015-03", "priceindex": 7.0, "category": 3121},
+        {"date": "2015-04", "priceindex": 8.0, "category": 3121},
+        {"date": "2015-05", "priceindex": 9.0, "category": 3121},
+        {"date": "2015-06", "priceindex": 10.0, "category": 3121},
+        {"date": "2015-07", "priceindex": 11.0, "category": 3121},
+        {"date": "2015-08", "priceindex": 12.0, "category": 3121},
+        {"date": "2015-09", "priceindex": 13.0, "category": 3121},
+        {"date": "2015-10", "priceindex": 13.0, "category": 3121},
+        {"date": "2015-11", "priceindex": 13.0, "category": 3121},
+        {"date": "2016-12", "priceindex": 4.0, "category": 3121},
+        {"date": "2016-01", "priceindex": 5.0, "category": 3121},
+        {"date": "2016-02", "priceindex": 6.0, "category": 3121},
+        {"date": "2017-03", "priceindex": 13.0, "category": 3122},
+        {"date": "2017-04", "priceindex": 13.0, "category": 3122},
+        {"date": "2017-05", "priceindex": 12.0, "category": 3122},
+        {"date": "2017-06", "priceindex": 11.0, "category": 3122},
+        {"date": "2017-07", "priceindex": 10.0, "category": 3122},
+        {"date": "2017-08", "priceindex": 9.0, "category": 3122},
+        {"date": "2017-09", "priceindex": 8.0, "category": 3122},
+        {"date": "2017-10", "priceindex": 7.0, "category": 3122},
+        {"date": "2017-11", "priceindex": 6.0, "category": 3122},
+        {"date": "2018-04", "priceindex": 5.0, "category": 3122},
+        {"date": "2018-01", "priceindex": 4.0, "category": 3122},
+        {"date": "2018-02", "priceindex": 3.0, "category": 3122},
+        {"date": "2018-03", "priceindex": 2.0, "category": 3122},
+        {"date": "2015-01", "priceindex": 2.0, "category": 3123}
         
       ],
       "format": {"parse": {"priceindex": "number", "date": "date"}},
       "transform": [
         { "type": "formula", "as": "day",
-          "expr": "datetime(year(datum.date), month(datum.date), date(datum.date))"},
+          "expr": "datetime(year(datum.date), month(datum.date))"},
         {"type": "formula", "as": "month", "expr": "datetime(year(datum.date), month(datum.date))"}
       ]
     }
@@ -915,8 +896,7 @@ function csvToArray(str, delimiter = ";") {
     { // Y-axis. 
       "name": "y",
       "type": "band",
-      "domain": [
-        1, 1.1, 2, 3, 4, 5, 6, 7, 8, 9 ,10, 11, 12, 13.1, 13.2, 14.1, 15.1],
+      "domain": categories,
       "range": "height"
     },
     {
@@ -954,7 +934,12 @@ function csvToArray(str, delimiter = ";") {
       "offset": {"signal": "datum.orient === 'top' ? 30 : 50"}
     }
   ],
-  "params": [{"name": "highlight", "select": "point"}],
+  "params": [
+      {
+       "name": "highlight", 
+       "select": {"type": "rect", "on": "mouseclick"}
+      }
+    ],
   "marks": [
     {
       "type": "rect",
@@ -966,7 +951,7 @@ function csvToArray(str, delimiter = ";") {
           "width": {"value": 24},//"value": 75},
           "height": {"scale": "y", "band": 1},
           "tooltip": {
-            "signal": "{'Category': datum.category, 'Consumer Price Index': datum.priceindex}"
+            "signal": "{'Month': year(datum.day) + 'M' + month(datum.day), 'Category': datum.category, 'Consumer Price Index': datum.priceindex}"
           }
         },
         "update": {
@@ -976,7 +961,7 @@ function csvToArray(str, delimiter = ";") {
             "condition": {"param": "highlight", "value": 0.5},
             "value": 1
           },
-          "order": {"condition": {"param": "highlight", "value": 1}, "value": 0}
+          "order": {"condition": {"param": "highlight", "value": 0.75}, "value": 0.5}
         }
       }
     }
@@ -1085,6 +1070,7 @@ function csvToArray(str, delimiter = ";") {
           ]
           }, { // The chart, where the brushing happens.
           "width": 1350, "height": 100, "padding": 0,
+          "title": "Brush", 
           "data": setWithdata,
           "encoding": {
             "x": {
@@ -1115,7 +1101,7 @@ function csvToArray(str, delimiter = ";") {
                 "color": {
                   "field": "cat",
                   "type": "ordinal",
-                  "legend": { "title": "Brush"},
+                  "legend": { "title": "Legend."},
                   "scale": {
                     // "total is removed. Used to be: (total,#481f70ff) "
                     "domain": ["increase", "decrease"],
