@@ -814,7 +814,7 @@ function csvToArray(str, delimiter = ";") {
   "description": "A heatmap showing the consumer price index for selected goods. ",
   "width": 800, "height": 500, "padding": 5,
   "title": {
-    "text": "Price index Heat Map for subcategories of: " + table,
+    "text": "Price index Heat Map for subcategories of: " + indholdToInsert[0].category,
     "anchor": "middle",
     "fontSize": 16,
     "frame": "group",
@@ -913,7 +913,7 @@ function csvToArray(str, delimiter = ";") {
       "name": "color",
       "type": "linear",
       "range": {"scheme": {"signal": "palette"}},
-      "domain": {"data": "data", "field": "priceindex"},
+      "domain": {"data": "data", "field": "priceindex"},"domainMid":100,
       "reverse": {"signal": "reverse"},
       "zero": false, "nice": true
     }
@@ -961,7 +961,7 @@ function csvToArray(str, delimiter = ";") {
           "width": {"value": 75},// 75 is just enough to cover all whitespace.
           "height": {"scale": "y", "band": 1},
           "tooltip": {
-            "signal": "{'Month': year(datum.day) + 'M' + month(datum.day), 'Category': datum.category, 'Consumer Price Index': datum.priceindex, 'Months are left-shifted!': 'M0 to M11'}"
+            "signal": "{'Month': year(datum.day) + '-' + (month(datum.day)+1), 'Category': datum.category, 'Consumer Price Index': datum.priceindex}"
           }
         },
         "update": {
