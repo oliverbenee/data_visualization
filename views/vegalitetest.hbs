@@ -706,9 +706,6 @@ function csvToArray(str, delimiter = ";") {
    }
 
 
-  function tidTilVegaTid(oldTid){
-    return 
-  }
 
 
 
@@ -1019,7 +1016,7 @@ function csvToArray(str, delimiter = ";") {
             "y": {
               "field": "start",
               "type": "quantitative",
-              "axis": { "title": "Consumer Price Index for: " + table },
+              "axis": { "title": "Consumer Price Index for: " + data[0].VAREGR },
               "scale": { "domain": [min-10, max+10]}
             },
             "y2": {
@@ -1147,6 +1144,13 @@ function csvToArray(str, delimiter = ";") {
   )
   }
 
+  document.getElementById("ChangeHeat").addEventListener("click", ChangeHeat);
+  var ButtonState = document.getElementById("ChangeHeat").checked
+  function ChangeHeat(){
+   ButtonState = document.getElementById("ChangeHeat").checked
+   buildSecond(Selector,false)
+  }
+
   // Embed the visualization in the container with id `vis`
   vegaEmbed('#sunburst', sunburst).then(({spec, view}) => {
     view.addEventListener('mousedown', function (event, item) {
@@ -1164,10 +1168,5 @@ Array.prototype.min = function() {
   return Math.min.apply(null, this);
 };
 
-document.getElementById("ChangeHeat").addEventListener("click", ChangeHeat);
-var ButtonState = false
-function ChangeHeat(){
-   ButtonState = document.getElementById("ChangeHeat").checked
 
-}
 </script>
