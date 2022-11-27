@@ -1039,7 +1039,7 @@ function csvToArray(str, delimiter = ";") {
               "field": "start",
               "type": "quantitative",
               "axis": { "title": "Consumer Price Index for: " + data[0].VAREGR },
-              "scale": { "domain": [min-10, max+10]}
+              "scale": {"domain": {"unionWith": [{"expr": "now()"}]}}
             },
             "y2": {
               "field": "end",
