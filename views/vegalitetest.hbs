@@ -654,7 +654,7 @@ function csvToArray(str, delimiter = ";") {
    
   }
 
-  function fetchDataCurrentYear(slectedTabel,VareGR){
+  function fetchDataAndChildren(slectedTabel,VareGR){
     return axios.post("https://api.statbank.dk/v1/data", {
    "table": slectedTabel,
    "format": "CSV",
@@ -668,6 +668,12 @@ function csvToArray(str, delimiter = ";") {
       {
          "code": "TID",
          "values": [
+            "2015*",
+            "2016*",
+            "2017*",
+            "2018*",
+            "2019*",
+            "2020*",
             "2021*"
          ]
       },
@@ -741,7 +747,7 @@ function csvToArray(str, delimiter = ";") {
     } else {table = "*0000"}
     }
     console.log("table: " + table)
-    const FetchDataPromisePris111 = new Promise((value) => {value(fetchDataCurrentYear("PRIS111",table))})
+    const FetchDataPromisePris111 = new Promise((value) => {value(fetchDataAndChildren("PRIS111",table))})
     FetchDataPromisePris111.then((value) => {
       console.log("value")
       const data = csvToArray(value.data)
@@ -805,10 +811,13 @@ function csvToArray(str, delimiter = ";") {
       var longestRowElementsTotal = 12 // TODO: HardCoded. This value should be the count of the most present category. Not spending time on that LOL
       var barLength = 800/longestRowElementsTotal
 
+
+
     //create heatmap
     var heatSpec = {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "description": "A heatmap showing the consumer price index for selected goods. ",
+  
   "width": 800, "height": 500, "padding": 5,
   "title": {
     "text": "Price index Heat Map for subcategories of: " + indholdToInsert[0].category,
@@ -867,7 +876,17 @@ function csvToArray(str, delimiter = ";") {
     },
     {
       "name": "reverse", "value": false, "bind": {"input": "checkbox"}
-    }
+    },{
+      "name": "From",
+      "value": "2015-01",
+      "bind": {"input": "month", "min":"2015-01",
+      "max":"2021-12"}
+    },{
+      "name": "To",
+      "value": "2021-12",
+      "bind": {"input": "month", "min":"2015-01",
+      "max":"2021-12"}
+    },
   ],
   // data. Currently only test values + UNIX dates. 
   "data": [
@@ -886,8 +905,8 @@ function csvToArray(str, delimiter = ";") {
     { // X-axis.
       "name": "x",
       "type": "time",
-      "domain": {"data": "data", "field": "month"},
-      "range": "width"
+      "domain": [{"signal":"time(From)"},{"signal":"time(To)"}],
+      "range": "width",
     },
     { // Y-axis. 
       "name": "y",
@@ -905,7 +924,7 @@ function csvToArray(str, delimiter = ";") {
     }
   ],
   "axes": [
-    {"orient": "bottom", "scale": "x", "domain": false, "title": "Month", "format": "%b"},
+    {"orient": "bottom", "scale": "x", "domain": false, "title": "Month", "format": "%Y" + "-" + "%B"},
     {
       "orient": "left", "scale": "y", "domain": false, "title": "Category",
       "encode": {
@@ -952,6 +971,7 @@ function csvToArray(str, delimiter = ";") {
         },
         "update": {
           "fill": {"scale": "color", "field": "priceindex"},
+          "x": {"scale": "x", "field": "month"},
           // Update based on selections in params. 
           "opacity": {
             "condition": {"param": "highlight", "value": 0.5},
@@ -959,8 +979,10 @@ function csvToArray(str, delimiter = ";") {
           },
           "order": {"condition": {"param": "highlight", "value": 0.75}, "value": 0.5}
         }
-      }
+      },"clip":true
     }
+
+
   ]
 
       }
