@@ -994,7 +994,6 @@ function csvToArray(str, delimiter = ";") {
       rightside.replaceChild(el,oldRightPic)}
       oldRightPic=el
       vegaEmbed(el, heatSpec).then(p => window.view = p.view).catch(console.error);
-      document.getElementById('rightside').scrollIntoView({ behavior: 'smooth', block: 'end'});
    })
    }
   var oldRightPic
@@ -1161,7 +1160,6 @@ function csvToArray(str, delimiter = ";") {
       rightside.replaceChild(el,oldRightPic)}
       oldRightPic=el
       vegaEmbed(el, waterfallSpec).then(p => window.view = p.view).catch(console.error);
-      document.getElementById('rightside').scrollIntoView({ behavior: 'smooth', block: 'end'});
     }
   )
   }
